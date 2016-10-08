@@ -1,9 +1,7 @@
 import React, { PropTypes } from 'react';
 import Paper from 'material-ui/Paper';
-import { signIn, signOut } from '../firebase/auth';
-import { auth } from '../firebase/config';
+import FlatButton from 'material-ui/FlatButton';
 import { connect } from 'react-redux';
-import { logInSuccess, logOutSuccess } from '../actions';
 import { amber500, orange500, orange50 } from 'material-ui/styles/colors';
 
 const main = {
@@ -23,15 +21,15 @@ const title = {
   right: 0,
   left: 0,
   margin: 'auto',
-}
+};
 
 const titleColor = {
   color: 'white',
-}
+};
 
 const subtitleColor = {
   color: orange50,
-}
+};
 
 const logo = {
   position: 'absolute',
@@ -41,18 +39,6 @@ const logo = {
   left: '50%',
   margin: 'auto',
   transform: 'rotate(30deg)',
-}
-
-const onSignIn = dispatch => () => {
-  signIn(result => {
-    dispatch(logInSuccess(result));
-  });
-};
-
-const onSignOut = dispatch => () => {
-  signOut(() => {
-    dispatch(logOutSuccess());
-  });
 };
 
 const Home = ({dispatch}) => (
