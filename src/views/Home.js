@@ -1,5 +1,7 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 import Paper from 'material-ui/Paper';
+import FlatButton from 'material-ui/FlatButton';
+import { connect } from 'react-redux';
 import { amber500, orange500, orange50 } from 'material-ui/styles/colors';
 
 const main = {
@@ -19,15 +21,15 @@ const title = {
   right: 0,
   left: 0,
   margin: 'auto',
-}
+};
 
 const titleColor = {
   color: 'white',
-}
+};
 
 const subtitleColor = {
   color: orange50,
-}
+};
 
 const logo = {
   position: 'absolute',
@@ -37,9 +39,9 @@ const logo = {
   left: '50%',
   margin: 'auto',
   transform: 'rotate(30deg)',
-}
+};
 
-const Home = () => (
+const Home = ({dispatch}) => (
   <div>
     <Paper style={main} zDepth={2}>
       <div style={title}>
@@ -51,4 +53,8 @@ const Home = () => (
   </div>
 );
 
-export default Home;
+Home.propType = {
+  dispatch: PropTypes.func.isRequired,
+};
+
+export default connect()(Home);
