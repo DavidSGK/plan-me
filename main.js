@@ -32,7 +32,7 @@ var config = {
 	messagingSenderId: "751157862033"
 };
 
-var NUM_INTERVAL = 14;//672
+var NUM_INTERVAL = 11;//672
 
 firebase.initializeApp(config);
 
@@ -174,8 +174,10 @@ function moveDown(calendar, event) {
 			bFound = true;
 			bStart = i;
 			b = calendar[i];
-		} else if (aFound && bFound && (! Object.compare(calendar[i], b) || i == calendar.length-1)) {
+		} else if (aFound && bFound && ! Object.compare(calendar[i], b)) {
 			bEnd = i;
+		} else if (i == calendar.length-1 && aFound && bFound){
+			bEnd = i+1;
 		}
 
 		if (aFound && i==calendar.length-1 && calendar[i] == null) {
@@ -211,5 +213,4 @@ var c = {'duration': 2, 'priority': 1, 'id': 3};
 var d = {'duration': 2, 'priority': 5, 'id': 4};
 var e = {'duration': 3, 'priority': 2, 'id': 5};
 
-// console.log(Object.compare(a,b));
-// console.log(moveDown(moveDown(moveDown(moveDown(layoutThings([a,b,c,d,e]), d), d), d), d));
+console.log(moveDown(layoutThings([a,b,c,d,e]), e));
