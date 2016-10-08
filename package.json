@@ -1,0 +1,32 @@
+{
+  "name": "calendar",
+  "version": "1.0.0",
+  "description": "MHacks 8 Intelligent Calendar",
+  "main": "index.js",
+  "scripts": {
+    "start": "webpack-dev-server --inline --content-base public/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DavidSGK/calendar.git"
+  },
+  "author": "David Kang, Wilson Wu, Alex Foley, Lawrence Pan",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/DavidSGK/calendar/issues"
+  },
+  "homepage": "https://github.com/DavidSGK/calendar#readme",
+  "devDependencies": {
+    "babel-core": "^6.17.0",
+    "babel-loader": "^6.2.5",
+    "babel-plugin-transform-object-rest-spread": "^6.16.0",
+    "babel-preset-es2015": "^6.16.0",
+    "babel-preset-react": "^6.16.0",
+    "webpack": "^1.13.2",
+    "webpack-dev-server": "^1.16.2"
+  },
+  "dependencies": {
+    "react": "^15.3.2",
+    "react-dom": "^15.3.2"
+  }
+}
