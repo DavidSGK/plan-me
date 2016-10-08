@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
-import { orange500, blueGrey900 } from 'material-ui/styles/colors';
+import { orange500, grey800 } from 'material-ui/styles/colors';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import store from './store';
 import Routes from './routes';
@@ -15,9 +15,7 @@ const muiTheme = getMuiTheme({
     primary1Color: orange500,
     primary2Color: orange500,
     primary3Color: orange500,
-  },
-  moreVertIcon: {
-    color: '#fff',
+    textColor: grey800,
   },
 });
 

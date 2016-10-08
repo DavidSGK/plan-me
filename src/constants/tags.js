@@ -10,12 +10,12 @@ export const WORK = 'WORK';
 
 export const SPORTS = 'SPORTS';
 
-export const MUSIC = 'MUSIC';
-
-export const ART = 'ART';
+export const ARTS = 'ARTS';
 
 export const HOBBY = 'HOBBY';
 
 export const LEISURE = 'LEISURE';
 
 export const FOOD = 'FOOD';
+
+export const CHORE = 'CHORE';

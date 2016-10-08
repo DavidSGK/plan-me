@@ -4,11 +4,44 @@ import { signIn, signOut } from '../firebase/auth';
 import { auth } from '../firebase/config';
 import { connect } from 'react-redux';
 import { logInSuccess, logOutSuccess } from '../actions';
+import { amber500, orange500, orange50 } from 'material-ui/styles/colors';
 
 const main = {
-  height: 100,
-  width: 100,
+  height: '100%',
+  width: '100%',
+  //colors are amber500, orange500
+  background: 'linear-gradient(to bottom right, #FFD54F, #F57C00)',
 };
+
+const title = {
+  fontSize: '200%',
+  width: '75%',
+  height: '10%',
+  position: 'absolute',
+  top: 0,
+  bottom: 0,
+  right: 0,
+  left: 0,
+  margin: 'auto',
+}
+
+const titleColor = {
+  color: 'white',
+}
+
+const subtitleColor = {
+  color: orange50,
+}
+
+const logo = {
+  position: 'absolute',
+  top: 0,
+  bottom: 0,
+  right: 0,
+  left: '50%',
+  margin: 'auto',
+  transform: 'rotate(30deg)',
+}
 
 const onSignIn = dispatch => () => {
   signIn(result => {
@@ -24,10 +57,13 @@ const onSignOut = dispatch => () => {
 
 const Home = ({dispatch}) => (
   <div>
-    <Paper style={main} zDepth={1} />
-    <Paper style={main} zDepth={2} />
-    <button onClick={onSignIn(dispatch)}>Sign in</button>
-    <button onClick={onSignOut(dispatch)}>Sign out</button>
+    <Paper style={main} zDepth={2}>
+      <div style={title}>
+        <span style={titleColor}><h1>Plan Me</h1></span>
+        <span style={subtitleColor}><h5>Take the management out of time management.</h5></span>
+      </div>
+      <img style={logo} src="/assets/Logo.svg" width="28%"></img>
+    </Paper>
   </div>
 );
 

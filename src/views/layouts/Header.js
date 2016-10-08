@@ -6,6 +6,10 @@ import IconMenu from 'material-ui/IconMenu';
 import MenuItem from 'material-ui/MenuItem';
 import { connect } from 'react-redux';
 
+const headerStyle = {
+  position: 'fixed',
+};
+
 const Logged = (props) => (
   <IconMenu
     {...props}
@@ -25,6 +29,7 @@ const Header = ({isLoggedIn}) => (
     title="Plan Me"
     showMenuIconButton={false}
     iconElementRight={isLoggedIn ? <Logged /> : null}
+    style={headerStyle}
   />
 );
 
