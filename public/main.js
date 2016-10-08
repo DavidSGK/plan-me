@@ -105,10 +105,10 @@ function collectSurveys() {
 
 }
 
-function layoutThings(lst) {
+function generateCalendar(lst) {
 	lst = mergesort(lst);
 
-	cal = [];
+	var cal = [];
 
 	for (var i=0; i<NUM_INTERVAL; i++) {
 		cal.push(null);
@@ -117,19 +117,109 @@ function layoutThings(lst) {
 	for (var i=0; i<lst.length; i++) {
 		var a = largestSubarrayIndex(cal);
 		var max = a[0], ind = a[1];
-		if (lst[i]['start']) ind = lst[i]['start'];
+		if (lst[i]['start']) {
+			ind = lst[i]['start'];
+			if(canBePlaced(cal, lst[i]['duration']), ind, 0) {
+				place(cal, lst[i]['duration'], ind, lst[i], 0);
+			} else {
+				place(cal, lst[i]['duration'], a[1], lst[i], 0);
+			}
+		}
 		if (lst[i]['duration'] <= max) {
-			place(cal, lst[i]['duration'], ind, lst[i]);
-			cal = cal;
+			place(cal, lst[i]['duration'], ind, lst[i], 0);
 		} else if (max == 0) {
 			break;
 		}
 	}
 
+	return cal;
+}
+
+function generateSmartCalendar(lst) {
+	if (!lst || lst.length == 0) return;
+	lst = mergesort(lst);
+
+	var cal = [];
+
+	for (var i=0; i<NUM_INTERVAL; i++) {
+		cal.push(null);
+	}
+
+	var avgSpace = numSpaces(NUM_INTERVAL, totalDuration(generateCalendar(lst)));
+
+	// if (! lst[0]['start']) {
+	// 	for (var i=0; i<lst.length; i++) {
+	// 		var a = largestSubarrayIndex(cal);
+	// 		var max = a[0], ind = a[1];
+	// 		if (lst[i]['start']) {
+	// 			ind = lst[i]['start'];
+	// 			if(canBePlaced(cal, lst[i]['duration'])) {
+	// 				place(cal, lst[i]['duration'], ind, lst[i]);
+	// 			} else {
+	// 				place(cal, lst[i]['duration'], a[1], lst[i]);
+	// 			}
+	// 		}
+	// 		if (lst[i]['duration'] <= max) {
+	// 			place(cal, lst[i]['duration'], ind, lst[i]);
+	// 		} else if (max == 0) {
+	// 			break;
+	// 		}
+	// 	}
+	// } else {
+
+
+		var obj = {};
+		for (var i=0; i<lst.length; i++) {
+			obj[i] = null;
+		}
+
+		var counter = 0;
+		while (lst[counter]['start']) {
+			for (var i = 0; i<lst[counter]['duration']+avgSpace; i++) {
+				delete obj[lst[counter]['start']+i];
+			}
+			place(cal, lst[counter]['duration'], lst[counter]['start'], lst[counter], avgSpace);
+			counter++;
+		}
+
+
+		for (var i=counter; i<lst.length; i++) {
+			var broken = false;
+			for (var j=avgSpace; j>=0; j--) {
+				for (var k=0; k<lst.length; k++) {
+					if (canBePlaced(obj, lst[i]['duration'], k, j)) {
+						console.log('nope');
+						placeObj(obj, lst[i]['duration'], k, j);
+						place(cal, lst[i]['duration'], k, lst[i], j);
+						broken = true;
+						break;
+					}
+				}
+				if (broken) break;
+			}
+		}
+
+
+
+		console.log(obj);
+	//}
+
 	calendar = cal;
 	console.log(cal);
-	db.ref('users/' + 'uid' + '/calendar').set(null);
-	db.ref('users/' + 'uid' + '/calendar').set(cal);
+	//db.ref('users/' + 'uid' + '/calendar').set(null);
+	//db.ref('users/' + 'uid' + '/calendar').set(cal);
+}
+
+function numSpaces(total, n) {
+	return Math.floor(total/n);
+}
+
+function totalDuration(arr) {
+	var total=0;
+	for (var i=0; i<arr.length;i++) {
+		if (arr[i] && !Object.compare(arr[i], arr[i-1])) total+=arr[i]['duration'];
+	}
+	return total;
 }
 
 function largestSubarrayIndex(arr) {
@@ -155,18 +245,22 @@ function largestSubarrayIndex(arr) {
 	return [max, ind];
 }
 
-function place(lst, n, ind, elem) {
-	for (var i=0; i<n; i++) {
-		lst[ind+i] = elem;
+function place(lst, n, ind, elem, space) {
+	for (var i=0; i<n+space; i++) {
+		if (i < n) lst[ind+i] = elem;
+		else lst[ind+i] = ' ';
 	}
 }
 
-function canBePlaced(lst, n, ind) {
-	if (ind + n-1 >= lst.length) {
-		return false;
+function placeObj(obj, n, ind, space) {
+	for (var i=0; i<n+space; i++) {
+		delete obj[ind+i];
 	}
-	for (var i=0; i<n; i++) {
-		if (lst[ind+i]) {
+}
+
+function canBePlaced(obj, n, ind, space) {
+	for (var i=0; i<n+space; i++) {
+		if (! ((ind+i) in obj))	 {
 			return false;
 		}
 	}
@@ -174,7 +268,7 @@ function canBePlaced(lst, n, ind) {
 }
 
 function mergesort(lst) {
-	if (lst.length == 1) {
+	if (lst.length <= 1) {
 		return lst;
 	}
 	return merge(mergesort(lst.slice(0, lst.length/2)), mergesort(lst.slice(lst.length/2, lst.length)));
@@ -222,12 +316,15 @@ function moveDown(calendar, event) {
 			b = calendar[i];
 		} else if (aFound && bFound && ! Object.compare(calendar[i], b)) {
 			bEnd = i;
+			break;
 		} else if (i == calendar.length-1 && aFound && bFound){
 			bEnd = i+1;
+			break;
 		}
 
 		if (aFound && i==calendar.length-1 && calendar[i] == null) {
 			bEnd = i+1;
+			break;
 		}
 
 		if (! b) {
@@ -237,11 +334,8 @@ function moveDown(calendar, event) {
 	}
 
 	if (! bFound) {
-		console.log('lmao');
-		db.ref('users/' + 'uid' + '/calendar').set(null);
-		db.ref('users/' + 'uid' + '/calendar').set(calendar);
-		return;
-	}
+		db.ref('users/'+'uid'+'/calendar').set(null);
+		db.ref('users/'+'uid'+'/calendar').set(calendar);	}
 
 	for (var i=bEnd-aStart-1; i>=0; i--) {
 		if (bEnd-i-1 < bStart) {
@@ -251,11 +345,10 @@ function moveDown(calendar, event) {
 		}
 	}
 
-	db.ref('users/' + 'uid' + '/calendar').set(null);
-	db.ref('users/' + 'uid' + '/calendar').set(calendar);
+	db.ref('users/'+'uid'+'/calendar').set(null);
+	db.ref('users/'+'uid'+'/calendar').set(calendar);
 
 }
-
 
 db.ref('users').child('uid').child('events').on('value', function(snapshot) {
 	var evArray = [];
@@ -266,20 +359,22 @@ db.ref('users').child('uid').child('events').on('value', function(snapshot) {
 	evArray.forEach(function(x) {
 		console.log(x);
 	});
-	layoutThings(evArray);
+
+	generateSmartCalendar(evArray);
 });
 
 
-function createEvent(title, description, priority, duration, start=null) {
-	db.ref('users/'+'uid'+'/events').push().set(
-	{
-		title: title,
-		description: description,
-		priority: priority,
-		duration: duration,
-		start: start
+function createEvent(title, description, tag, duration, start=null) {
+	db.ref('users/'+'uid'+'/tags').once('value', function(snapshot) {
+			db.ref('users/'+'uid'+'/events').push().set(
+			{
+				title: title,
+				description: description,
+				priority: snapshot.val()[tag],
+				duration: duration,
+				start: start
 
-	});	
+			}
+		);
+	});
 }
-
-createEvent('bye', 'the worst', 1);
