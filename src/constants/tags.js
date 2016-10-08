@@ -10,7 +10,7 @@ export const WORK = 'WORK';
 
 export const SPORTS = 'SPORTS';
 
-export const MUSIC = 'MUSIC';
+export const ARTS = 'ARTS';
 
 export const HOBBY = 'HOBBY';
 
