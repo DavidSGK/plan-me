@@ -1,29 +1,15 @@
 import React from 'react';
 import Paper from 'material-ui/Paper';
-import TextField from 'material-ui/TextField';
 
-const styles = {
-  textField: {
-  },
-  textBox: {
-    textAlign: 'center',
-  },
+const main = {
+  height: 100,
+  width: 100,
 };
-
-const USERNAME = 'Username';
 
 const Home = () => (
   <div>
-    <Paper style={styles.textBox} zDepth={2}>
-      <TextField
-        hintText={USERNAME}
-        floatingLabelText={USERNAME}
-      />
-      <TextField
-        hintText={USERNAME}
-        floatingLabelText={USERNAME}
-      />
-    </Paper>
+    <Paper style={main} zDepth={1} />
+    <Paper style={main} zDepth={2} />
   </div>
 );
 
