@@ -1,51 +1,116 @@
-"You are a competitive person"
-competitive = ["FRIENDS", "SCHOOL", "WORK"]
-nonCompetitive = ["HOBBY", "ARTS", "ROMANCE"]
-
-"You consider yourself an introvert."
-introvert = ["HOBBY", "ARTS", "CHORE", "FOOD"]
-extrovert = ["FRIENDS", "ROMANCE", "FAMILY", "SPORTS"]
-
-"You like spending your free time just laying back and relaxing."
-nonProductive = ["FRIENDS", "ROMANCE", "FOOD"]
-productive = ["FAMILY", "SPORTS", "SCHOOL", "HOBBY", "CHORE"]
-
-"You consider yourself an outdoor-sy person"
-outdoors = ["SPORTS", "FRIENDS", "ROMANCE"]
-indoors = ["FAMILY", "ARTS", "HOBBY", "CHORE"]
-
-"You commonly find time to see close friends."
-close = ["FAMILY", "ROMANCE"]
-nonClose = ["FRIENDS"]
-
-"You can't relax when there is a deadline coming up."
-fun = ["FRIENDS", "ROMANCE", "FAMILY", "SPORTS", "ARTS", "HOBBY", "LEISURE"]
-nonFun = ["SCHOOL", "WORK", "CHORE"]
-
-"You prefer a simple dinner with family over going out with friends to eat."
-home = ["FAMILY"]
-nonHome = ["FRIENDS"]
-
-"You find hobbies more important than reading away at textbooks."
-hobbies = ["SPORTS", "HOBBY", "ARTS"]
-nonHobbies =  ["WORK", "SCHOOL"]
-
-"You dont mind missing a small deadline or two."
-nonDeadlines = ["FRIENDS", "ROMANCE", "LEISURE"]
-deadlines = ["WORK", "SCHOOL"]
-
-"You find it calming to work on a side project."
-nonLeisure = ["HOBBY", "ARTS"]
-pureLeisure = ["LEISURE"]
-
-"You have a tendency to procrastinate."
-important =  ["WORK", "SCHOOL", "CHORE"]
-nonImportant = ["FRIENDS", "ROMANCE", "LEISURE", "FOOD"]
-
+import * as T from './constants/tags';
 const tags = {
-	FAMILY: ['indoors', 'productive']
+  FRIENDS : 0,
+  SCHOOL : 0,
+  WORK : 0,
+  HOBBY : 0,
+  ROMANCE : 0,
+  FAMILY : 0,
+  SPORTS : 0,
+  ARTS : 0,
+  LEISURE : 0,
+  FOOD : 0,
+  CHORE : 0
+}
+var quArray = setQuestionArray();
+manuallyTestTags();
+var sorted = sortTags();
+
+function sortTags(){
+  //sort the tags
+  var sorted = [];
+  for (var i in tags){
+    sorted.push([i, tags[i]]);
+  }
+  sorted.sort(function(a, b) {
+      return b[1] - a[1];
+  });
+  for(var i = 0; i < sorted.length; i++){
+    sorted[i][1] = i+1;
+  }  return sorted;
 }
 
-const tags = {
-	FAMILY: 0
+
+console.log(sorted);
+console.log(tags);
+function manuallyTestTags(){
+  var quArray = setQuestionArray();
+  updateTags(quArray[0].high, quArray[0].low, 1);
+  updateTags(quArray[1].high, quArray[1].low, 1);
+  updateTags(quArray[2].high, quArray[2].low, 2);
+  updateTags(quArray[3].high, quArray[3].low, 0);
+  updateTags(quArray[4].high, quArray[4].low, 2);
+  updateTags(quArray[5].high, quArray[5].low, 2);
+  updateTags(quArray[6].high, quArray[6].low, -2);
+  updateTags(quArray[7].high, quArray[7].low, 0);
+  updateTags(quArray[8].high, quArray[8].low, 1);
+  updateTags(quArray[9].high, quArray[9].low, 1);
+  updateTags(quArray[10].high, quArray[10].low, 0);
 }
+function updateTags(high, low, ans){
+  high.forEach(function(tagName){
+    tags[tagName] += ans;
+  });
+  low.forEach(function(tagName){
+    tags[tagName] -= ans;
+  });
+}
+
+function setQuestionArray(){
+  var quArray = [];
+  var numQuestions = 11; //hardcoded, for hardcoded questions
+  quArray.push(returnQuestionSet(
+    "You are a competitive person",
+    [T.FRIENDS, T.SCHOOL, T.WORK],
+    [T.ARTS, T.ROMANCE]));
+  quArray.push(returnQuestionSet(
+    "You consider yourself an introvert.",
+    [T.HOBBY, T.ARTS, T.CHORE, T.FOOD],
+    [T.FRIENDS, T.ROMANCE, T.FAMILY, T.SPORTS]));
+  quArray.push(returnQuestionSet(
+    "You like spending your free time just laying back and relaxing.",
+    [T.FRIENDS, T.ROMANCE, T.FOOD],
+    [T.FAMILY, T.SPORTS, T.SCHOOL, T.HOBBY, T.CHORE]));
+  quArray.push(returnQuestionSet(
+    "You consider yourself an outdoor-sy person",
+    [T.SPORTS, T.FRIENDS, T.ROMANCE],
+    [T.FAMILY, T.ARTS, T.HOBBY, T.CHORE]));
+  quArray.push(returnQuestionSet(
+    "You commonly find time to see close friends.",
+    [T.FAMILY, T.ROMANCE],
+    [T.FRIENDS]));
+  quArray.push(returnQuestionSet(
+    "You can't relax when there is a deadline coming up.",
+    [T.SCHOOL, T.WORK, T.CHORE],
+    [T.FRIENDS, T.ROMANCE, T.FAMILY, T.SPORTS, T.ARTS, T.LEISURE]));
+  quArray.push(returnQuestionSet(
+    "You prefer a simple dinner with family over going out with friends to eat.",
+    [T.FAMILY],
+    [T.FRIENDS]));
+  quArray.push(returnQuestionSet(
+    "You find hobbies more important than reading away at textbooks.",
+    [T.SPORTS, T.HOBBY, T.ARTS],
+    [T.WORK, T.SCHOOL]));
+  quArray.push(returnQuestionSet(
+    "You dont mind missing a small deadline or two.",
+    [T.FRIENDS, T.ROMANCE, T.LEISURE],
+    [T.WORK, T.SCHOOL]));
+  quArray.push(returnQuestionSet(
+    "You find it calming to work on a side project.",
+    [T.HOBBY, T.ARTS],
+    [T.LEISURE]));
+  quArray.push(returnQuestionSet(
+    "You have a tendency to procrastinate.",
+    [T.WORK, T.SCHOOL, T.CHORE],
+    [T.FRIENDS, T.ROMANCE, T.LEISURE, T.FOOD]));
+
+  return quArray;
+}
+function returnQuestionSet(question, high, low){
+  return {
+    question: question,
+    high: high,
+    low: low
+  };
+}
+

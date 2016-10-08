@@ -8,7 +8,7 @@ import {
   UPDATE_PRIORITIES,
 } from '../constants/user';
 
-const pickUserInfo = pick(['displayName', 'email', 'photoURL']);
+export const pickUserInfo = pick(['displayName', 'email', 'photoURL']);
 
 const initialState = {
   isLoggedIn: false,
