@@ -127,6 +127,7 @@ function layoutThings(lst) {
 	}
 
 	calendar = cal;
+	console.log(cal);
 	db.ref('users/' + 'uid' + '/calendar').set(null);
 	db.ref('users/' + 'uid' + '/calendar').set(cal);
 }
@@ -237,7 +238,9 @@ function moveDown(calendar, event) {
 
 	if (! bFound) {
 		console.log('lmao');
-		return calendar;
+		db.ref('users/' + 'uid' + '/calendar').set(null);
+		db.ref('users/' + 'uid' + '/calendar').set(calendar);
+		return;
 	}
 
 	for (var i=bEnd-aStart-1; i>=0; i--) {
@@ -267,11 +270,12 @@ db.ref('users').child('uid').child('events').on('value', function(snapshot) {
 });
 
 
-function createEvent(title, description, duration, start=null) {
+function createEvent(title, description, priority, duration, start=null) {
 	db.ref('users/'+'uid'+'/events').push().set(
 	{
 		title: title,
 		description: description,
+		priority: priority,
 		duration: duration,
 		start: start
 
