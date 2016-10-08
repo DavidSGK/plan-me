@@ -19,3 +19,5 @@ export const HOBBY = 'HOBBY';
 export const LEISURE = 'LEISURE';
 
 export const FOOD = 'FOOD';
+
+export const CHORE = 'CHORE';
