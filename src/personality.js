@@ -20,21 +20,28 @@ export const quArray = setQuestionArray();
 
 export function sortTags(){
   //sort the tags
-  var sorted = [];
+  var sortedArr = [];
   for (var i in tags){
-    sorted.push([i, tags[i]]);
+    sortedArr.push([i, tags[i]]);
   }
-  sorted.sort(function(a, b) {
+  sortedArr.sort(function(a, b) {
       return b[1] - a[1];
   });
-  for(var i = 0; i < sorted.length; i++){
-    sorted[i][1] = i+1;
-  }  return sorted;
+  for(var i = 0; i < sortedArr.length; i++){
+    sortedArr[i][1] = i+1;
+  }  
+  var sorted = {};
+  sortedArr.forEach(function(sortedElement){
+    sorted[sortedElement[0]] = sortedElement[1];
+  });
+  return sorted;
 }
 
 
 // console.log(sorted);
 // console.log(tags);
+//UNCOMMENT ONCE COMBINED WITH THE MAIN.JS
+//setTags(sorted); //function in the main.js, will error until then
 function manuallyTestTags(){
   var quArray = setQuestionArray();
   updateTags(quArray[0].high, quArray[0].low, 1);
