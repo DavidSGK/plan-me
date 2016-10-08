@@ -15,7 +15,9 @@ const muiTheme = getMuiTheme({
     primary1Color: orange500,
     primary2Color: orange500,
     primary3Color: orange500,
-    textColor: blueGrey900,
+  },
+  moreVertIcon: {
+    color: '#fff',
   },
 });
 
