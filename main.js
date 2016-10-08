@@ -34,6 +34,8 @@ var config = {
 
 var NUM_INTERVAL = 11;//672
 
+var calendar = null;
+
 firebase.initializeApp(config);
 
 var db = firebase.database();
@@ -81,13 +83,13 @@ function initApp(){
 	firebase.auth().onAuthStateChanged(function(user) {
 		if (user) {
 		  // User is signed in.
-		  var displayName = user.displayName;
-		  var email = user.email;
-		  var emailVerified = user.emailVerified;
-		  var photoURL = user.photoURL;
-		  var isAnonymous = user.isAnonymous;
-		  var uid = user.uid;
-		  var providerData = user.providerData;
+		  displayName = user.displayName;
+		  email = user.email;
+		  emailVerified = user.emailVerified;
+		  photoURL = user.photoURL;
+		  isAnonymous = user.isAnonymous;
+		  uid = user.uid;
+		  providerData = user.providerData;
 		  console.log(uid);
 		}
 	});	
@@ -124,7 +126,9 @@ function layoutThings(lst) {
 		}
 	}
 
-	return cal;
+	calendar = cal;
+	db.ref('users/' + 'uid' + '/calendar').set(null);
+	db.ref('users/' + 'uid' + '/calendar').set(cal);
 }
 
 function largestSubarrayIndex(arr) {
@@ -244,28 +248,34 @@ function moveDown(calendar, event) {
 		}
 	}
 
-	return calendar;
+	db.ref('users/' + 'uid' + '/calendar').set(null);
+	db.ref('users/' + 'uid' + '/calendar').set(calendar);
 
 }
 
-function createEventArray(user){
+
+db.ref('users').child('uid').child('events').on('value', function(snapshot) {
 	var evArray = [];
 
-	db.ref('users').child(user).child('events').on('value').then(function(snapshot) {
-		var len = snapshot.numChildren();
-		for(var i = 0; i < len; i++){
-			evArray.push(snapshot.child(i.toString()).val());
-		}
-		evArray.forEach(function(event){
-			console.log(event);
-		});
+	snapshot.forEach(function (child){
+		evArray.push(child.val());
 	});
+	evArray.forEach(function(x) {
+		console.log(x);
+	});
+	layoutThings(evArray);
+});
+
+
+function createEvent(title, description, duration, start=null) {
+	db.ref('users/'+'uid'+'/events').push().set(
+	{
+		title: title,
+		description: description,
+		duration: duration,
+		start: start
+
+	});	
 }
 
-var a = {'duration': 2, 'priority': 1, 'id': 1};
-var b = {'duration': 2, 'priority': 1, 'id': 2};
-var c = {'duration': 2, 'priority': 1, 'id': 3};
-var d = {'duration': 2, 'priority': 5, 'id': 4};
-var e = {'duration': 3, 'priority': 2, 'id': 5};
-
-console.log(moveDown(layoutThings([a,b,c,d,e]), e));
+createEvent('bye', 'the worst', 1);
