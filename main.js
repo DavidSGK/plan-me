@@ -8,6 +8,8 @@ var config = {
 	messagingSenderId: "751157862033"
 };
 
+var NUM_INTERVAL = 10;//672
+
 firebase.initializeApp(config);
 
 var db = firebase.database();
@@ -38,7 +40,55 @@ function collectSurveys() {
 }
 
 function layoutThings(lst) {
+	lst = mergesort(lst);
 
+	cal = [];
+
+	for (var i=0; i<NUM_INTERVAL; i++) {
+		cal.push(null);
+	}
+
+	for (var i=0; i<lst.length; i++) {
+		var a = largestSubarrayIndex(cal);
+		var max = a[0], ind = a[1];
+		if (lst[i]['duration'] <= max) {
+			place(cal, lst[i]['duration'], ind, lst[i]['id']);
+			cal = cal;
+		} else if (max == 0) {
+			break;
+		}
+	}
+
+	return cal;
+}
+
+function largestSubarrayIndex(arr) {
+	var start=0;
+	var max = 0, ind=0;
+
+	for (var i=0; i<arr.length; i++) {
+		if (arr[i] != null || arr[start] != null) {
+			if (i - start > max) {
+				max = i-start;
+				ind = start;
+			}
+			start=i;
+		}
+
+		if (i == arr.length-1 && arr[i] == null) {
+			if (i - start + 1 > max) {
+				max = i-start+1;
+				ind = start;
+			}
+		}
+	}
+	return [max, ind];
+}
+
+function place(lst, n, ind, elem) {
+	for (var i=0; i<n; i++) {
+		lst[ind+i] = elem;
+	}
 }
 
 function canBePlaced(lst, n, ind) {
@@ -57,7 +107,6 @@ function mergesort(lst) {
 	if (lst.length == 1) {
 		return lst;
 	}
-	console.log(lst.slice(0, lst.length/2), lst.slice(lst.length/2, lst.length));
 	return merge(mergesort(lst.slice(0, lst.length/2)), mergesort(lst.slice(lst.length/2, lst.length)));
 }
 
@@ -87,4 +136,11 @@ function merge(l1, l2) {
 	return lt;
 }
 
-var a = [null, 123, null];
+var a = {'duration': 2, 'priority': 1, 'id': 1};
+var b = {'duration': 2, 'priority': 1, 'id': 2};
+var c = {'duration': 2, 'priority': 1, 'id': 3};
+var d = {'duration': 2, 'priority': 5, 'id': 4};
+var e = {'duration': 3, 'priority': 2, 'id': 5};
+
+
+console.log(layoutThings([a,b,c,d,e]));
