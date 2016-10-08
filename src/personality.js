@@ -1,5 +1,6 @@
 import * as T from './constants/tags';
-const tags = {
+
+export const tags = {
   FRIENDS : 0,
   SCHOOL : 0,
   WORK : 0,
@@ -12,11 +13,12 @@ const tags = {
   FOOD : 0,
   CHORE : 0
 }
-var quArray = setQuestionArray();
-manuallyTestTags();
-var sorted = sortTags();
 
-function sortTags(){
+export const quArray = setQuestionArray();
+// manuallyTestTags();
+// var sorted = sortTags();
+
+export function sortTags(){
   //sort the tags
   var sorted = [];
   for (var i in tags){
@@ -31,8 +33,8 @@ function sortTags(){
 }
 
 
-console.log(sorted);
-console.log(tags);
+// console.log(sorted);
+// console.log(tags);
 function manuallyTestTags(){
   var quArray = setQuestionArray();
   updateTags(quArray[0].high, quArray[0].low, 1);
@@ -47,7 +49,7 @@ function manuallyTestTags(){
   updateTags(quArray[9].high, quArray[9].low, 1);
   updateTags(quArray[10].high, quArray[10].low, 0);
 }
-function updateTags(high, low, ans){
+export function updateTags(high, low, ans){
   high.forEach(function(tagName){
     tags[tagName] += ans;
   });
@@ -108,9 +110,8 @@ function setQuestionArray(){
 }
 function returnQuestionSet(question, high, low){
   return {
-    question: question,
-    high: high,
-    low: low
+    question,
+    high,
+    low,
   };
 }
-

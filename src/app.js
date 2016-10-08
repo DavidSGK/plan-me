@@ -8,6 +8,8 @@ import Routes from './routes';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import { auth } from './firebase/config';
 import { logInSuccess } from './actions';
+import { browserHistory } from 'react-router';
+import { syncHistoryWithStore } from 'react-router-redux';
 
 import injectTapEventPlugin from 'react-tap-event-plugin';
 injectTapEventPlugin();
@@ -22,6 +24,7 @@ const muiTheme = getMuiTheme({
 });
 
 const store = createStore();
+const history = syncHistoryWithStore(browserHistory, store)
 
 const unsubscribe = auth.onAuthStateChanged(user => {
   store.dispatch(logInSuccess({user}));
@@ -31,7 +34,7 @@ const unsubscribe = auth.onAuthStateChanged(user => {
 ReactDOM.render(
   <MuiThemeProvider muiTheme={muiTheme}>
     <Provider store={store} >
-      <Routes />
+      <Routes history={history} />
     </Provider>
   </MuiThemeProvider>,
   document.getElementById('root')
