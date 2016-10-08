@@ -101,8 +101,10 @@ window.onload = function() {
 	initApp();
 }
 
-function collectSurveys() {
-
+function getCalendar(f) {
+	db.ref('users/' + 'uid' + '/calendar').on('value', function(snapshot) {
+		f(snapshot.val());
+	});
 }
 
 function generateCalendar(lst) {
@@ -147,67 +149,51 @@ function generateSmartCalendar(lst) {
 
 	var avgSpace = numSpaces(NUM_INTERVAL, totalDuration(generateCalendar(lst)));
 
-	// if (! lst[0]['start']) {
-	// 	for (var i=0; i<lst.length; i++) {
-	// 		var a = largestSubarrayIndex(cal);
-	// 		var max = a[0], ind = a[1];
-	// 		if (lst[i]['start']) {
-	// 			ind = lst[i]['start'];
-	// 			if(canBePlaced(cal, lst[i]['duration'])) {
-	// 				place(cal, lst[i]['duration'], ind, lst[i]);
-	// 			} else {
-	// 				place(cal, lst[i]['duration'], a[1], lst[i]);
-	// 			}
-	// 		}
-	// 		if (lst[i]['duration'] <= max) {
-	// 			place(cal, lst[i]['duration'], ind, lst[i]);
-	// 		} else if (max == 0) {
-	// 			break;
-	// 		}
-	// 	}
-	// } else {
+	var obj = {};
+	for (var i=0; i<lst.length; i++) {
+		obj[i] = null;
+	}
 
-
-		var obj = {};
-		for (var i=0; i<lst.length; i++) {
-			obj[i] = null;
+	var counter = 0;
+	while (lst[counter]['start']) {
+		for (var i = 0; i<lst[counter]['duration']+avgSpace; i++) {
+			delete obj[lst[counter]['start']+i];
 		}
-
-		var counter = 0;
-		while (lst[counter]['start']) {
-			for (var i = 0; i<lst[counter]['duration']+avgSpace; i++) {
-				delete obj[lst[counter]['start']+i];
-			}
-			place(cal, lst[counter]['duration'], lst[counter]['start'], lst[counter], avgSpace);
-			counter++;
-		}
+		place(cal, lst[counter]['duration'], lst[counter]['start'], lst[counter], avgSpace);
+		counter++;
+	}
 
 
-		for (var i=counter; i<lst.length; i++) {
-			var broken = false;
-			for (var j=avgSpace; j>=0; j--) {
-				for (var k=0; k<lst.length; k++) {
-					if (canBePlaced(obj, lst[i]['duration'], k, j)) {
-						console.log('nope');
-						placeObj(obj, lst[i]['duration'], k, j);
-						place(cal, lst[i]['duration'], k, lst[i], j);
-						broken = true;
-						break;
-					}
+	for (var i=counter; i<lst.length; i++) {
+		var broken = false;
+		for (var j=avgSpace; j>=0; j--) {
+			for (var k=0; k<lst.length; k++) {
+				if (canBePlaced(obj, lst[i]['duration'], k, j)) {
+					console.log('nope');
+					placeObj(obj, lst[i]['duration'], k, j);
+					place(cal, lst[i]['duration'], k, lst[i], j);
+					broken = true;
+					break;
 				}
-				if (broken) break;
 			}
+			if (broken) break;
 		}
-
-
+	}
 
 		console.log(obj);
 	//}
 
+	for (var i=0; i<cal.length; i++) {
+		if (cal[i] === " ") cal[i] = null;
+	}
+
 	calendar = cal;
-	console.log(cal);
-	//db.ref('users/' + 'uid' + '/calendar').set(null);
-	//db.ref('users/' + 'uid' + '/calendar').set(cal);
+	db.ref('users/' + 'uid' + '/calendar').set(null);
+	db.ref('users/' + 'uid' + '/calendar').set(cal);
+}
+
+function setTags(obj) {
+	db.ref('users/'+'uid'+'/tags').set(obj);
 }
 
 function numSpaces(total, n) {
@@ -260,7 +246,7 @@ function placeObj(obj, n, ind, space) {
 
 function canBePlaced(obj, n, ind, space) {
 	for (var i=0; i<n+space; i++) {
-		if (! ((ind+i) in obj))	 {
+		if (! ((ind+i) in obj))	x {
 			return false;
 		}
 	}
