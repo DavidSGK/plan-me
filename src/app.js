@@ -1,8 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import Routes from './routes';
 
-const Comp = () => (
-  <p>yo</p>
+ReactDOM.render(
+  <Routes />,
+  document.getElementById('root')
 );
-
-ReactDOM.render(<Comp />, document.getElementById('root'));

@@ -4,7 +4,7 @@
   "description": "MHacks 8 Intelligent Calendar",
   "main": "index.js",
   "scripts": {
-    "start": "webpack-dev-server --inline --content-base public/"
+    "start": "webpack-dev-server --inline --content-base public/ --history-api-fallback"
   },
   "repository": {
     "type": "git",
@@ -27,6 +27,7 @@
   },
   "dependencies": {
     "react": "^15.3.2",
-    "react-dom": "^15.3.2"
+    "react-dom": "^15.3.2",
+    "react-router": "^2.8.1"
   }
 }
