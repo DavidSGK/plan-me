@@ -12,8 +12,6 @@ export const SPORTS = 'SPORTS';
 
 export const MUSIC = 'MUSIC';
 
-export const ART = 'ART';
-
 export const HOBBY = 'HOBBY';
 
 export const LEISURE = 'LEISURE';
