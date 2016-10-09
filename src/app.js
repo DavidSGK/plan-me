@@ -9,7 +9,7 @@ import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import { auth } from './firebase/config';
 import { logInSuccess } from './actions';
 import { browserHistory } from 'react-router';
-import { syncHistoryWithStore } from 'react-router-redux';
+import { syncHistoryWithStore, push } from 'react-router-redux';
 
 import injectTapEventPlugin from 'react-tap-event-plugin';
 injectTapEventPlugin();
@@ -26,9 +26,12 @@ const muiTheme = getMuiTheme({
 const store = createStore();
 const history = syncHistoryWithStore(browserHistory, store)
 
-const unsubscribe = auth.onAuthStateChanged(user => {
-  store.dispatch(logInSuccess({user}));
-  unsubscribe();
+auth.onAuthStateChanged(user => {
+  if (user) {
+    store.dispatch(logInSuccess({user}));
+  } else {
+    store.dispatch(push('/'));
+  }
 });
 
 ReactDOM.render(

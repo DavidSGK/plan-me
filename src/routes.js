@@ -11,8 +11,14 @@ const Routes = ({ history }) => (
     <Header />
     <Route path="/" component={Root}>
       <IndexRoute component={Home} />
-      <Route path="/setup" component={Setup} />
-      <Route path="/dashboard" component={Dashboard} />
+      <Route
+        path="/setup"
+        component={Setup}
+      />
+      <Route
+        path="/dashboard"
+        component={Dashboard}
+      />
     </Route>
   </Router>
 );
