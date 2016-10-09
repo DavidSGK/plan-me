@@ -4,7 +4,7 @@
   "description": "MHacks 8 Intelligent Calendar",
   "main": "index.js",
   "scripts": {
-    "start": "webpack-dev-server --config webpack.config.dev.js --inline --content-base public/ --history-api-fallback",
+    "start": "webpack-dev-server --config webpack.config.dev.js --inline --content-base docs/ --history-api-fallback",
     "build": "webpack --config webpack.config.prod.js --profile --colors"
   },
   "repository": {
