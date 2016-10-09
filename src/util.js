@@ -46,6 +46,8 @@ export function getCalendar(db, uid, cb) {
 export function generateCalendar(lst) {
   lst = mergesort(lst);
 
+  console.log(lst);
+
   var cal = [];
 
   for (var i=0; i<NUM_INTERVAL; i++) {
@@ -59,8 +61,10 @@ export function generateCalendar(lst) {
       ind = lst[i]['start'];
       if(canBePlaced(cal, lst[i]['duration']), ind, 0) {
         place(cal, lst[i]['duration'], ind, lst[i], 0);
+        continue;
       } else {
         place(cal, lst[i]['duration'], a[1], lst[i], 0);
+        continue;
       }
     }
     if (lst[i]['duration'] <= max) {
@@ -69,43 +73,42 @@ export function generateCalendar(lst) {
       break;
     }
   }
-
   return cal;
 }
 
 export function generateSmartCalendar(db, uid, lst) {
   if (!lst || lst.length == 0) return;
   lst = mergesort(lst);
-
-  var cal = [];
-
-  for (var i=0; i<NUM_INTERVAL; i++) {
-    cal.push(null);
-  }
+  var calc = new Array(672).fill(null);
 
   var avgSpace = numSpaces(NUM_INTERVAL, totalDuration(generateCalendar(lst)));
+
 
   var obj = {};
   for (var i=0; i<NUM_INTERVAL; i++) {
     obj[i] = null;
   }
 
+  console.log(lst);
+
   var counter = 0;
   while (lst[counter]['start']) {
     for (var i = 0; i<lst[counter]['duration']+avgSpace; i++) {
       delete obj[lst[counter]['start']+i];
     }
-    place(cal, lst[counter]['duration'], lst[counter]['start'], lst[counter], avgSpace);
+    place(calc, lst[counter]['duration'], lst[counter]['start'], lst[counter], avgSpace);
     counter++;
   }
 
   for (var i=counter; i<lst.length; i++) {
+    console.log(obj);
     var broken = false;
     for (var j=avgSpace; j>=0; j--) {
       for (var k in obj) {
         if (canBePlaced(obj, lst[i]['duration'], k, j)) {
+          console.log(j);
           placeObj(obj, lst[i]['duration'], k, j);
-          place(cal, lst[i]['duration'], k, lst[i], j);
+          place(calc, lst[i]['duration'], k, lst[i], j);
           broken = true;
           break;
         }
@@ -114,13 +117,13 @@ export function generateSmartCalendar(db, uid, lst) {
     }
   }
 
-  for (var i=0; i<cal.length; i++) {
-    if (cal[i] === " ") cal[i] = null;
+  for (var i=0; i<calc.length; i++) {
+    if (calc[i] === " ") calc[i] = null;
   }
 
-  calendar = cal;
+  //calendar = calc;
   db.ref('users/' + uid + '/calendar').set(null);
-  db.ref('users/' + uid + '/calendar').set(cal);
+  db.ref('users/' + uid + '/calendar').set(calc);
 }
 
 export function setTags(db, uid, obj) {
@@ -163,21 +166,23 @@ export function largestSubarrayIndex(arr) {
 }
 
 export function place(lst, n, ind, elem, space) {
+  console.log(n, space);
   for (var i=0; i<n+space; i++) {
-    if (i < n) lst[ind+i] = elem;
-    else lst[ind+i] = ' ';
+    if (i < n) lst[parseInt(ind)+i] = elem;
+    else lst[parseInt(ind)+i] = ' ';
   }
 }
 
 export function placeObj(obj, n, ind, space) {
+  console.log(parseInt(n)+parseInt(space));
   for (var i=0; i<n+space; i++) {
-    delete obj[ind+i];
+    delete obj[parseInt(ind)+i];
   }
 }
 
 export function canBePlaced(obj, n, ind, space) {
   for (var i=0; i<n+space; i++) {
-    if (! ((ind+i) in obj)) {
+    if (! ((parseInt(ind)+i) in obj)) {
       return false;
     }
   }
@@ -279,11 +284,20 @@ export function startEventListener(db, uid) {
   });
 }
 
+export function roundTo15(n) {
+  var close = Math.floor(n/15)*15;
+  if (n-close <= 7) {
+    return close;
+  }
+  return close + 15;
+}
+
 export function createEvent(db, uid, title, description, tag, duration, start=null) {
   db.ref('users/'+uid+'/tags').once('value', function(snapshot) {
-    const priority = tag ? snapshot.val()[tag] : 0;
+    const priority = start ? snapshot.val()[tag] : 0;
     db.ref('users/'+uid+'/events').push().set(
       {
+        tag,
         title,
         description,
         priority,
