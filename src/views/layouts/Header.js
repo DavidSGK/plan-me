@@ -6,21 +6,8 @@ import IconButton from 'material-ui/IconButton';
 import IconMenu from 'material-ui/IconMenu';
 import MenuItem from 'material-ui/MenuItem';
 import { connect } from 'react-redux';
-import { logInSuccess, logOutSuccess } from '../../actions';
-import { signIn, signOut } from '../../firebase/auth';
-import { auth } from '../../firebase/config';
-
-const onSignIn = dispatch => () => {
-  signIn(result => {
-    dispatch(logInSuccess(result));
-  });
-};
-
-const onSignOut = dispatch => () => {
-  signOut(() => {
-    dispatch(logOutSuccess());
-  });
-};
+import { onSignIn, onSignOut } from '../../utils/auth';
+import { push } from 'react-router-redux';
 
 const headerStyle = {
   position: 'fixed',
@@ -46,19 +33,19 @@ const Logged = ({ dispatch }) => (
     targetOrigin={{horizontal: 'right', vertical: 'top'}}
     anchorOrigin={{horizontal: 'right', vertical: 'top'}}
   >
-    <MenuItem primaryText="Settings" />
     <MenuItem primaryText="Sign out" onClick={onSignOut(dispatch)} />
   </IconMenu>
 );
 
 const Header = ({isLoggedIn, dispatch}) => (
   <AppBar
-    title="Plan Me"
+    title={<span style={{cursor: 'pointer'}}>Plan Me</span>}
     showMenuIconButton={false}
     iconElementRight={
       isLoggedIn ? <Logged dispatch={dispatch} /> : <LogIn dispatch={dispatch} />
     }
     style={headerStyle}
+    onTitleTouchTap={() => { dispatch(push('/')); }}
   />
 );
 
