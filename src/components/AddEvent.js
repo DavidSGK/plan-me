@@ -56,7 +56,7 @@ class AddEvent extends Component {
       return nonEnforced;
     }
 
-    return Boolean(nonEnforced && (day > = 0) && time);
+    return Boolean(nonEnforced && (day >= 0) && time);
   }
 
   submitInfo() {
