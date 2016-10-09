@@ -9,6 +9,7 @@ import { questions, genTags, updateTags, sortTags } from '../personality';
 import { connect } from 'react-redux';
 import { db } from '../firebase/config';
 import { setTags } from '../util';
+import { push } from 'react-router-redux';
 
 const topSpace = {
   paddingTop: 64,
@@ -111,6 +112,7 @@ class Setup extends Component {
     };
     this.answer = this.answer.bind(this);
     this.updatePriorities = this.updatePriorities.bind(this);
+    this.submitQuestions = this.submitQuestions.bind(this);
   }
 
   updatePriorities(question, value) {
@@ -124,8 +126,13 @@ class Setup extends Component {
     this.setState({ questionsAnswered: over(answerLens, T, this.state.questionsAnswered) });
   }
 
+  submitQuestions() {
+    const {uid, dispatch} = this.props;
+    setTags(db, uid, sortTags(this.state.tags));
+    dispatch(push('/dashboard'));
+  }
+
   render() {
-    const {uid} = this.props;
     return (
       <div style={topSpace}>
         <h3 style={leftText}>DISAGREE</h3>
@@ -144,12 +151,12 @@ class Setup extends Component {
             label="SUBMIT"
             primary
             style={buttonStyle}
-            onClick={() => { setTags(db, uid, sortTags(this.state.tags)) }}
+            onClick={this.submitQuestions}
           />
         </div>
 
-      <h3 style={rightText}>AGREE</h3>
-    </div>
+        <h3 style={rightText}>AGREE</h3>
+      </div>
     )
   }
 }
