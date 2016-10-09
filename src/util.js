@@ -92,7 +92,7 @@ export function generateSmartCalendar(db, uid, lst) {
   console.log(lst);
 
   var counter = 0;
-  while (lst[counter] && lst[counter]['start']) {
+  while (lst[counter] &&  lst[counter]['start']) {
     for (var i = 0; i<lst[counter]['duration']+avgSpace; i++) {
       delete obj[lst[counter]['start']+i];
     }
@@ -294,7 +294,7 @@ export function roundTo15(n) {
 
 export function createEvent(db, uid, title, description, tag, duration, start=null) {
   db.ref('users/'+uid+'/tags').once('value', function(snapshot) {
-    const priority = start ? snapshot.val()[tag] : 0;
+    const priority = start ? 0 : snapshot.val()[tag];
     db.ref('users/'+uid+'/events').push().set(
       {
         tag,
