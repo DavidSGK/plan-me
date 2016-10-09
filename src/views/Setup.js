@@ -6,13 +6,13 @@ import {RadioButton, RadioButtonGroup} from 'material-ui/RadioButton';
 import RaisedButton from 'material-ui/RaisedButton';
 import { over, T, F, lensIndex } from 'ramda';
 import { questions, genTags, updateTags, sortTags } from '../personality';
-import { push } from 'react-router-redux';
 import { connect } from 'react-redux';
 import { db } from '../firebase/config';
 import { setTags } from '../util';
 
 const topSpace = {
   paddingTop: 64,
+  width: '100%',
 };
 
 const cardStyle = {
@@ -29,9 +29,7 @@ const radioButtonStyle = {
 };
 
 const buttonStyle = {
-  display: 'flex',
-  width: 64,
-  margin: 'auto',
+  width: 68,
 }
 
 const leftText = {
@@ -80,22 +78,22 @@ class Question extends Component {
             >
               <RadioButton style={radioButtonStyle}
                 value='-3'
-                />
+              />
               <RadioButton style={radioButtonStyle}
                 value='-2'
-                />
+              />
               <RadioButton style={radioButtonStyle}
                 value='-1'
-                />
+              />
               <RadioButton style={radioButtonStyle}
                 value='1'
-                />
+              />
               <RadioButton style={radioButtonStyle}
                 value='2'
-                />
+              />
               <RadioButton style={radioButtonStyle}
                 value='3'
-                />
+              />
             </RadioButtonGroup>
           </CardText>
         </Card>
@@ -113,13 +111,6 @@ class Setup extends Component {
     };
     this.answer = this.answer.bind(this);
     this.updatePriorities = this.updatePriorities.bind(this);
-  }
-
-  componentWillMount() {
-    const { isLoggedIn, dispatch } = this.props;
-    if (!isLoggedIn) {
-      dispatch(push('/'));
-    }
   }
 
   updatePriorities(question, value) {
@@ -148,14 +139,17 @@ class Setup extends Component {
           />
         ))}
 
-        <RaisedButton
-          label="SUBMIT"
-          style={buttonStyle}
-          onClick={() => { setTags(db, uid, sortTags(this.state.tags)) }}
-        />
+        <div style={{ textAlign: 'center', marginBottom: '20px' }}>
+          <RaisedButton
+            label="SUBMIT"
+            primary
+            style={buttonStyle}
+            onClick={() => { setTags(db, uid, sortTags(this.state.tags)) }}
+          />
+        </div>
 
-        <h3 style={rightText}>AGREE</h3>
-      </div>
+      <h3 style={rightText}>AGREE</h3>
+    </div>
     )
   }
 }
