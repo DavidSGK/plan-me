@@ -22,11 +22,11 @@ const buttonStyle = {
 };
 
 const LogIn = ({dispatch}) => (
-  <FlatButton style={buttonStyle} label="Login" onClick={onSignIn(dispatch)}/>  
+  <FlatButton style={buttonStyle} label="Login" onClick={onSignIn(dispatch)}/>
 );
 
 const Logged = ({ dispatch }) => (
-  <IconMenu
+  <IconMenu iconStyle={{color : 'white',}}
     iconButtonElement={
       <IconButton><MoreVertIcon /></IconButton>
     }
