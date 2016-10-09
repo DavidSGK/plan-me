@@ -4,6 +4,7 @@ import Paper from 'material-ui/Paper';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import { merge, slice } from 'ramda';
 import AddEvent from '../components/AddEvent';
+import { connect } from 'react-redux';
 
 //Test code
 var sample = new Array(672).fill(null);
@@ -190,38 +191,42 @@ const eventBlock = {
   color : 'white',
   fontSize : '60%',
   overflow : 'hidden',
+  padding : 3,
 };
 
-var i, j, k;
+const weekToDays = (weekArray) => {
+  const days = new Array(7);
 
-const days = new Array(7);
-for(i = 0; i < 7; i++){
-  console.log()
-  days[i] = slice(i * 96, (i+1) * 96, sample);
-  for(j = 0; j < 96; j++){
-    if(j == 0 && days[i][0] != null && (days[i][days[i][0].duration-1] == null || days[i][0].title != days[i][days[i][0].duration-1].title)){
-      days[i][0].duration--;
-      j--;
-      continue;
-    } else if(j == 0){
-      while(days[i][j] != null){
-        j++;
-        days[i][j] = null;
-      }
-      j = 0;
-    }
-    if(days[i][j] != null){
-      if(j + days[i][j].duration <= 96){
-        for(k = 1; k < days[i][j].duration; k++){
-          days[i][j+k] = null;
-        }
-      } else {
-        days[i][j].duration -= (j + days[i][j].duration - 96);
+  var i, j, k;
+  for(i = 0; i < 7; i++){
+    console.log()
+    days[i] = slice(i * 96, (i+1) * 96, weekArray);
+    for(j = 0; j < 96; j++){
+      if(j == 0 && days[i][0] != null && (days[i][days[i][0].duration-1] == null || days[i][0].title != days[i][days[i][0].duration-1].title)){
+        days[i][0].duration--;
         j--;
         continue;
+      } else if(j == 0){
+        while(days[i][j] != null){
+          j++;
+          days[i][j] = null;
+        }
+        j = 0;
+      }
+      if(days[i][j] != null){
+        if(j + days[i][j].duration <= 96){
+          for(k = 1; k < days[i][j].duration; k++){
+            days[i][j+k] = null;
+          }
+        } else {
+          days[i][j].duration -= (j + days[i][j].duration - 96);
+          j--;
+          continue;
+        }
       }
     }
   }
+  return days;
 };
 
 var randomMC = require('random-material-color');
@@ -245,6 +250,7 @@ class Dashboard extends Component {
   };
 
   render() {
+    const days = weekToDays(sample);
     return (
       <div style={topSpace}>
         <Paper style={calendarPane}>
@@ -270,20 +276,21 @@ class Dashboard extends Component {
               </tbody>
               {days.map(function(a, i){
                 return days[i].map(function(b, j){
-                  /*console.log(b.duration * 4.167, j * 4.167, (i + 1) * 12.5);*/
                   if(b !== null){
                     return <div key={j} style={merge(eventBlock, {
-                      height : `${b.duration * 1.0}%`,
-                      top : `${j * 1.04}%`,
+                      height : `${b.duration * (100 / 96)}%`,
+                      top : `${j * (100 / 96)}%`,
                       left : `${(i + 1) * 12.5 + (8 - i) / 10}%`,
-                      background : `${randomMC.getColor()}`})
-                    }>{b.title}</div>;
+                      background : `${randomMC.getColor()}`})}
+                    >{b.title}</div>;
                   } else return null;
-                  })
+                })
               })}
             </table>
           </div>
         </Paper>
+
+        <div style={tooltipStyle}>Test</div>
 
         <FloatingActionButton
           style={fabStyle}
