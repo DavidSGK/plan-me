@@ -103,7 +103,7 @@ const timeList = [
 ];
 
 const calendarPane = {
-  width : '65%',
+  width : '90%',
   height : '80%',
   position : 'absolute',
   bottom : '7%',
@@ -183,7 +183,7 @@ class Dashboard extends Component {
     return (
       <div style={topSpace}>
         <Paper style={calendarPane}>
-          <div style={merge(calendarDiv, {height : '11%',})}>
+          <div style={merge(calendarDiv, {height : '13%',})}>
             <table style={headerTableStyle}>
               <tbody>
                 <tr>
@@ -193,7 +193,7 @@ class Dashboard extends Component {
               </tbody>
             </table>
           </div>
-          <div style={merge(calendarDiv, {height : '89%',})}>
+          <div style={merge(calendarDiv, {height : '87%',})}>
             <table style={tableStyle}>
               <tbody>
                 {timeList.map(function(a, i){
@@ -211,7 +211,11 @@ class Dashboard extends Component {
                       top : `${j * (100 / 96)}%`,
                       left : `${(i + 1) * 12.5 + (8 - i) / 10}%`,
                       background : `${RandomMC.getColor()}`})}
-                    >{b.title}</div>;
+                    >
+                    <h5>{b.title}</h5>
+                    <br></br>
+                    <p>{b.description}</p>
+                  </div>;
                   } else return null;
                 })
               })}
