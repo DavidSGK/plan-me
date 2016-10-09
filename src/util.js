@@ -23,14 +23,24 @@ Object.compare = function (obj1, obj2) {
   return true;
 };
 
-var NUM_INTERVAL = 11;//672
+var NUM_INTERVAL = 672;
 
 var calendar = null;
 
 export function getCalendar(db, uid, cb) {
-  db.ref('users/' + uid + '/events').on('value', function(snapshot) {
-    console.warn(snapshot.val());
-    cb(snapshot.val());
+  db.ref('users/' + uid + '/calendar').on('value', function(snapshot) {
+    var arr = new Array(672).fill(null);
+    if (! snapshot.val()) {
+      cb(arr);
+      return;
+    }
+    for (var i=0; i<arr.length; i++) {
+      if (i in snapshot.val()) {
+        arr[i] = snapshot.val()[i];
+      }
+    }
+    console.warn(arr);
+    cb(arr);
   });
 }
 
@@ -66,6 +76,7 @@ export function generateCalendar(lst) {
 
 export function generateSmartCalendar(db, uid, lst) {
   if (!lst || lst.length == 0) return;
+  console.log(lst);
   lst = mergesort(lst);
 
   var cal = [];
@@ -77,7 +88,7 @@ export function generateSmartCalendar(db, uid, lst) {
   var avgSpace = numSpaces(NUM_INTERVAL, totalDuration(generateCalendar(lst)));
 
   var obj = {};
-  for (var i=0; i<lst.length; i++) {
+  for (var i=0; i<NUM_INTERVAL; i++) {
     obj[i] = null;
   }
 
@@ -90,13 +101,12 @@ export function generateSmartCalendar(db, uid, lst) {
     counter++;
   }
 
-
   for (var i=counter; i<lst.length; i++) {
+    console.log(i);
     var broken = false;
     for (var j=avgSpace; j>=0; j--) {
-      for (var k=0; k<lst.length; k++) {
+      for (var k in obj) {
         if (canBePlaced(obj, lst[i]['duration'], k, j)) {
-          console.log('nope');
           placeObj(obj, lst[i]['duration'], k, j);
           place(cal, lst[i]['duration'], k, lst[i], j);
           broken = true;
@@ -106,9 +116,6 @@ export function generateSmartCalendar(db, uid, lst) {
       if (broken) break;
     }
   }
-
-  console.log(obj);
-  //}
 
   for (var i=0; i<cal.length; i++) {
     if (cal[i] === " ") cal[i] = null;
@@ -124,7 +131,7 @@ export function setTags(db, uid, obj) {
 }
 
 export function numSpaces(total, n) {
-  return Math.floor(total/n);
+  return Math.floor(total/n)-1;
 }
 
 export function totalDuration(arr) {
@@ -271,7 +278,7 @@ export function startEventListener(db, uid) {
       evArray.push(child.val());
     });
 
-    generateSmartCalendar(evArray);
+    generateSmartCalendar(db, uid, evArray);
   });
 }
 
