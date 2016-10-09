@@ -11,7 +11,7 @@ import { db } from '../firebase/config';
 import * as Tags from '../constants/tags';
 import { keys, complement } from 'ramda';
 import { connect } from 'react-redux';
-import { createEvent } from '../util';
+import { createEvent, roundTo15 } from '../util';
 
 const isNumber = complement(isNaN);
 
@@ -64,10 +64,10 @@ class AddEvent extends Component {
     const {eventName, description, tag, duration, day, time, enforce} = this.state;
 
     if (!enforce) {
-      createEvent(db, uid, eventName, description, tag, duration / 15);
+      createEvent(db, uid, eventName, description, tag, roundTo15(duration) / 15);
     } else {
-      const start = 96 * day + 4 * time.getHours() + time.getMinutes() / 15;
-      createEvent(db, uid, eventName, description, null, duration / 15, start);
+      const start = 96 * day + 4 * time.getHours() + roundTo15(time.getMinutes()) / 15;
+      createEvent(db, uid, eventName, description, tag, roundTo15(duration) / 15, start);
     }
     this.props.handleClose();
   }
