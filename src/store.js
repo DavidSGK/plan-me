@@ -4,13 +4,22 @@ import createLogger from 'redux-logger';
 import rootReducer from './reducers';
 import { routerMiddleware } from 'react-router-redux';
 import { browserHistory } from 'react-router'
+import { apply } from 'ramda';
 
 const logger = createLogger();
+
+const isProd = process.env.NODE_ENV === 'production';
+
+const middlewares = [thunk, routerMiddleware(browserHistory)];
+
+if (!isProd) {
+  middlewares.push(logger);
+}
 
 export function configureStore(initialState = {}) {
   // Middleware and store enhancers
   const enhancers = [
-    applyMiddleware(thunk, logger, routerMiddleware(browserHistory)),
+    apply(applyMiddleware)(middlewares),
   ];
 
   const store = createStore(rootReducer, initialState, compose(...enhancers));
