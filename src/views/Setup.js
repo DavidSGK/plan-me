@@ -5,6 +5,7 @@ import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColu
 import {RadioButton, RadioButtonGroup} from 'material-ui/RadioButton';
 import RaisedButton from 'material-ui/RaisedButton';
 import { over, T, F, lensIndex } from 'ramda';
+import { questions, genTags, updateTags } from '../personality';
 
 const topSpace = {
   paddingTop: 64,
@@ -29,24 +30,6 @@ const buttonStyle = {
   margin: 'auto',
 }
 
-const questions = [
-  {
-    text: 'Do you like chores?',
-    callbacks: [],
-    answered: false,
-  },
-  {
-    text: 'Do you like chores?',
-    callbacks: [],
-    answered: false,
-  },
-  {
-    text: 'Do you like chores?',
-    callbacks: [],
-    answered: false,
-  }
-];
-
 const leftText = {
   position: 'fixed',
   top: '50%',
@@ -67,22 +50,25 @@ class Question extends Component {
     super(props);
     this.state = {
       value: props.value,
+      tags: genTags(),
     };
     this.updateValue = this.updateValue.bind(this);
   }
 
   updateValue(evt, value) {
-    console.warn(this.props.index);
-    this.props.answer(this.props.index);
-    this.setState({ value });
+    const { answer, index, question } = this.props;
+    answer(index);
+    this.setState({ tags: updateTags(question.high, question.low, value, this.state.tags) });
+    console.warn(this.state.tags);
   }
 
   render() {
+    const { index, question } = this.props;
     return (
       <div>
         <Card style={cardStyle}>
-          <CardTitle title={`Question ${this.props.index + 1}`} />
-          <CardText>{this.props.text}</CardText>
+          <CardTitle title={`Question ${index + 1}`} />
+          <CardText>{question.question}</CardText>
           <Divider />
           <CardText>
             <RadioButtonGroup
@@ -136,7 +122,7 @@ class Setup extends Component {
       <div style={topSpace}>
         <h3 style={leftText}>DISAGREE</h3>
         {questions.map(
-          ({text}, i) => <Question key={i} index={i} text={text} answer={this.answer}/>
+          (question, i) => <Question key={i} index={i} question={question} answer={this.answer}/>
         )}
 
         <RaisedButton label="SUBMIT" style={buttonStyle} />
