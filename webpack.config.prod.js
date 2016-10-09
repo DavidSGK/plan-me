@@ -2,7 +2,7 @@ const webpack = require('webpack');
 const path = require('path');
 
 const SRC_PATH = path.join(__dirname, 'src', 'app.js');
-const BUILD_PATH = path.join(__dirname, 'public');
+const BUILD_PATH = path.join(__dirname, 'docs');
 
 module.exports = {
   devtool: 'cheap-module-eval-source-map',
