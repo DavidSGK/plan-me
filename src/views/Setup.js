@@ -5,7 +5,7 @@ import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColu
 import {RadioButton, RadioButtonGroup} from 'material-ui/RadioButton';
 import RaisedButton from 'material-ui/RaisedButton';
 import { over, T, F, lensIndex } from 'ramda';
-import { questions, genTags, updateTags } from '../personality';
+import { questions, genTags, updateTags, sortTags } from '../personality';
 
 const topSpace = {
   paddingTop: 64,
@@ -50,16 +50,14 @@ class Question extends Component {
     super(props);
     this.state = {
       value: props.value,
-      tags: genTags(),
     };
     this.updateValue = this.updateValue.bind(this);
   }
 
   updateValue(evt, value) {
-    const { answer, index, question } = this.props;
+    const { answer, index, question, updatePriorities } = this.props;
     answer(index);
-    this.setState({ tags: updateTags(question.high, question.low, value, this.state.tags) });
-    console.warn(this.state.tags);
+    updatePriorities(question, value);
   }
 
   render() {
@@ -75,7 +73,7 @@ class Question extends Component {
               name="choices"
               style={radioButtonGroupStyle}
               onChange={this.updateValue}
-              >
+            >
               <RadioButton style={radioButtonStyle}
                 value='-3'
                 />
@@ -107,8 +105,15 @@ class Setup extends Component {
     super();
     this.state = {
       questionsAnswered: questions.map(F),
+      tags: genTags(),
     };
     this.answer = this.answer.bind(this);
+    this.updatePriorities = this.updatePriorities.bind(this);
+  }
+
+  updatePriorities(question, value) {
+    this.setState({ tags: updateTags(question.high, question.low, value, this.state.tags) });
+    console.warn(this.state.tags);
   }
 
   // TODO make it work
@@ -121,11 +126,20 @@ class Setup extends Component {
     return (
       <div style={topSpace}>
         <h3 style={leftText}>DISAGREE</h3>
-        {questions.map(
-          (question, i) => <Question key={i} index={i} question={question} answer={this.answer}/>
-        )}
+        {questions.map((question, i) => (
+          <Question
+            key={i}
+            index={i}
+            question={question}
+            answer={this.answer}
+            updatePriorities={this.updatePriorities}
+          />
+        ))}
 
-        <RaisedButton label="SUBMIT" style={buttonStyle} />
+        <RaisedButton
+          label="SUBMIT"
+          style={buttonStyle}
+        />
 
         <h3 style={rightText}>AGREE</h3>
       </div>
