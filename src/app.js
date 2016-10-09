@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
-import { orange500, grey800, white } from 'material-ui/styles/colors';
+import { orange500, grey800 } from 'material-ui/styles/colors';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import createStore from './store';
 import Routes from './routes';
@@ -20,7 +20,6 @@ const muiTheme = getMuiTheme({
     primary2Color: orange500,
     primary3Color: orange500,
     textColor: grey800,
-    alternateTextcolor: white,
   },
 });
 

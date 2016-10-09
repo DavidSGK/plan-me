@@ -60,7 +60,7 @@ const cellStyle = {
   padding : 15,
   width : '12.5%',
   height : 75,
-  fontSize : '80%',
+  fontSize : '150%',
   fontWeight : 100,
 };
 
@@ -183,7 +183,7 @@ class Dashboard extends Component {
     return (
       <div style={topSpace}>
         <Paper style={calendarPane}>
-          <div style={merge(calendarDiv, {height : '10%',})}>
+          <div style={merge(calendarDiv, {height : '11%',})}>
             <table style={headerTableStyle}>
               <tbody>
                 <tr>
@@ -193,7 +193,7 @@ class Dashboard extends Component {
               </tbody>
             </table>
           </div>
-          <div style={merge(calendarDiv, {height : '90%',})}>
+          <div style={merge(calendarDiv, {height : '89%',})}>
             <table style={tableStyle}>
               <tbody>
                 {timeList.map(function(a, i){
