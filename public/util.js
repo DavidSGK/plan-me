@@ -262,18 +262,17 @@ function moveDown(db, uid, calendar, event) {
 
 }
 
-db.ref('users').child(uid).child('events').on('value', function(snapshot) {
-  var evArray = [];
+function startEventListener(db, uid) {
+  db.ref('users').child(uid).child('events').on('value', function(snapshot) {
+    var evArray = [];
 
-  snapshot.forEach(function (child){
-    evArray.push(child.val());
-  });
-  evArray.forEach(function(x) {
-    console.log(x);
-  });
+    snapshot.forEach(function (child){
+      evArray.push(child.val());
+    });
 
-  generateSmartCalendar(evArray);
-});
+    generateSmartCalendar(evArray);
+  });
+}
 
 
 function createEvent(db, uid, title, description, tag, duration, start=null) {
@@ -296,5 +295,6 @@ Util = {
   generateSmartCalendar: generateSmartCalendar,
   setTags: setTags,
   moveDown: moveDown,
-  createEvent: createEvent
+  createEvent: createEvent,
+  startEventListener: startEventListener,
 }
