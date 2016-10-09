@@ -28,7 +28,8 @@ var NUM_INTERVAL = 11;//672
 var calendar = null;
 
 export function getCalendar(db, uid, cb) {
-  db.ref('users/' + uid + '/calendar').on('value', function(snapshot) {
+  db.ref('users/' + uid + '/events').on('value', function(snapshot) {
+    console.warn(snapshot.val());
     cb(snapshot.val());
   });
 }
@@ -274,16 +275,29 @@ export function startEventListener(db, uid) {
   });
 }
 
+export function removeEventListener(db, uid) {
+  db.ref('users').child(uid).child('events').off('value', function(snapshot) {
+    var evArray = [];
+
+    snapshot.forEach(function (child){
+      evArray.push(child.val());
+    });
+
+    generateSmartCalendar(evArray);
+  });
+}
+
 
 export function createEvent(db, uid, title, description, tag, duration, start=null) {
   db.ref('users/'+uid+'/tags').once('value', function(snapshot) {
+    const priority = tag ? snapshot.val()[tag] : 0;
     db.ref('users/'+uid+'/events').push().set(
       {
-        title: title,
-        description: description,
-        priority: snapshot.val()[tag],
-        duration: duration,
-        start: start
+        title,
+        description,
+        priority,
+        duration,
+        start,
 
       }
     );

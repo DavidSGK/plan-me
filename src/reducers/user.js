@@ -7,6 +7,7 @@ import {
   LOG_IN_SUCCESS,
   LOG_OUT_SUCCESS,
   UPDATE_TAGS,
+  UPDATE_CALENDAR,
 } from '../constants/user';
 
 const initialState = {
@@ -29,6 +30,14 @@ const user = (state = initialState, action) => {
 
     case LOG_OUT_SUCCESS: {
       return initialState;
+    }
+
+    case UPDATE_CALENDAR: {
+      console.warn(action.payload);
+      return merge(
+        state,
+        { calendar: action.payload }
+      );
     }
 
     default: {

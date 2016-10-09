@@ -2,6 +2,7 @@ import * as User from '../constants/user';
 import { has, allPass } from 'ramda';
 import { push } from 'react-router-redux';
 import { db } from '../firebase/config';
+import { startEventListener, getCalendar, removeEventListener } from '../util';
 
 const logInRealSuccess = payload => ({
   type: User.LOG_IN_SUCCESS,
@@ -13,8 +14,19 @@ const updateTags = tags => ({
   payload: tags,
 });
 
+const updateCalendar = calendar => ({
+  type: User.UPDATE_CALENDAR,
+  payload: calendar,
+});
+
 export const logInSuccess = payload => (dispatch, getState) => {
   dispatch(logInRealSuccess(payload));
+  const { uid } = getState().user;
+  startEventListener(db, uid);
+  console.warn(uid);
+
+  getCalendar(db, uid, calendar => dispatch(updateCalendar(calendar)));
+
   // check if the user has done the questionnaire
   db.ref(`users/${getState().user.uid}/tags`).once('value', snap => {
     const tags = snap.val();
@@ -26,6 +38,9 @@ export const logInSuccess = payload => (dispatch, getState) => {
   });
 };
 
-export const logOutSuccess = () => ({
-  type: User.LOG_OUT_SUCCESS,
-});
+export const logOutSuccess = () => {
+  removeEventListener();
+  return {
+    type: User.LOG_OUT_SUCCESS,
+  };
+};
