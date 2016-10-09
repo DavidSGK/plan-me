@@ -364,3 +364,14 @@ function createEvent(title, description, tag, duration, start=null) {
 		);
 	});
 }
+
+Util = {
+	toggleSignIn: toggleSignIn,
+	initApp: initApp,
+	getCalendar: getCalendar,
+	generateSmartCalendar: generateSmartCalendar,
+	setTags: setTags,
+	moveDown: moveDown,
+	createEvent: createEvent,
+	uid: uid,
+}
