@@ -194,10 +194,16 @@ for(i = 0; i < 7; i++){
   console.log()
   days[i] = slice(i * 96, (i+1) * 96, sample);
   for(j = 0; j < 96; j++){
-    if(j == 0 && days[i][0] != null && (days[i][days[i][0].duration] == null || days[i][0].title != days[i][days[i][0].duration].title)){
+    if(j == 0 && days[i][0] != null && (days[i][days[i][0].duration-1] == null || days[i][0].title != days[i][days[i][0].duration-1].title)){
       days[i][0].duration--;
       j--;
       continue;
+    } else if(j == 0){
+      while(days[i][j] != null){
+        j++;
+        days[i][j] = null;
+      }
+      j = 0;
     }
     if(days[i][j] != null){
       if(j + days[i][j].duration <= 96){
@@ -212,13 +218,6 @@ for(i = 0; i < 7; i++){
     }
   }
 };
-console.log(days[0]);
-console.log(days[1]);
-for(i = 0; i < 7; i++){
-  for(j = 0; j < 96; j++){
-    if(days[i][j] != null) console.log(i, j);
-  }
-}
 
 const Dashboard = () => (
   <div style={topSpace}>
@@ -242,8 +241,19 @@ const Dashboard = () => (
             </tr>
           })}
         </tbody>
-        //Insert event blocks
-
+        {days.map(function(a, i){
+          return days[i].filter(b => b !== null).map(function(b, j){
+            /*console.log(eventBlock, b.duration * 4.167, j * 4.167, (i + 1) * 12.5);
+            console.log('hi');*/
+            return <div key={j} style={merge(eventBlock, {
+                height : `${b.duration * 4.167}%`,
+                top : `${j * 4.167}%`,
+                left : `${(i + 1) * 12.5}%`})
+          }>Hello World</div>;})
+          divs.map(function(b, j){
+            return b;
+          })
+        })}
       </table>
       </div>
     </Paper>
