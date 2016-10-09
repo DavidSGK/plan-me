@@ -33,6 +33,7 @@ const Logged = ({ dispatch }) => (
     targetOrigin={{horizontal: 'right', vertical: 'top'}}
     anchorOrigin={{horizontal: 'right', vertical: 'top'}}
   >
+    <MenuItem primaryText="Take the quiz" onClick={() => { dispatch(push('/setup')) }} />
     <MenuItem primaryText="Sign out" onClick={onSignOut(dispatch)} />
   </IconMenu>
 );
