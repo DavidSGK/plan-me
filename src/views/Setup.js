@@ -117,7 +117,6 @@ class Setup extends Component {
 
   updatePriorities(question, value) {
     this.setState({ tags: updateTags(question.high, question.low, value, this.state.tags) });
-    console.warn(this.state.tags);
   }
 
   // TODO make it work
