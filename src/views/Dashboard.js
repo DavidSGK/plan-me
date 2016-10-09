@@ -90,7 +90,7 @@ const tableStyle = {
   position : 'absolute',
   margin : '3%',
   marginTop : '0',
-  border : '1 solid black',
+  //border : '1 solid black',
   borderCollapse : 'collapse',
   tableLayout : 'fixed',
   width : '94%',
@@ -102,41 +102,43 @@ const headerTableStyle = {
   position : 'absolute',
   margin : '3%',
   marginBottom : '0',
-  border : '1 solid black',
   borderCollapse : 'collapse',
   tableLayout : 'fixed',
 }
 
 const thContents = [
-  '',
-  'Sunday',
-  'Monday',
-  'Tuesday',
-  'Wednesday',
-  'Thursday',
-  'Friday',
-  'Saturday',
+  'SUN',
+  'MON',
+  'TUE',
+  'WED',
+  'THU',
+  'FRI',
+  'SAT',
 ];
 
 const emptyRow = ['', '', '', '', '', '', ''];
 
 const cellStyle = {
-  border : '1px solid black',
+  borderTop : '1px solid #AAAAAA',
+  borderBottom : '1px solid #AAAAAA',
+  borderLeft : '1px solid #555555',
+  borderRight : '1px solid #555555',
   borderCollapse : 'collapse',
   padding : 15,
   width : '12.5%',
+  height : 75,
   fontSize : '80%',
   fontWeight : 100,
 };
 
 const timeCellStyle = {
-  border : '1px solid black',
+  borderRight : '3px solid #555555',
   borderCollapse : 'collapse',
   padding : 3,
   textAlign : 'right',
   verticalAlign : 'top',
   width : 'auto',
-  fontSize : '60%',
+  fontSize : '75%',
   fontWeight : 100,
 }
 
@@ -165,7 +167,6 @@ const timeList = [
   '9 PM',
   '10 PM',
   '11 PM',
-  '12 AM',
 ];
 
 const calendarPane = {
@@ -183,9 +184,12 @@ const calendarDiv = {
 };
 
 const eventBlock = {
-  width : '12.5%',
+  //border : '1px solid white',
+  width : '12.2%',
   position : 'absolute',
-  background : 'red',
+  color : 'white',
+  fontSize : '60%',
+  overflow : 'hidden',
 };
 
 var i, j, k;
@@ -220,6 +224,8 @@ for(i = 0; i < 7; i++){
   }
 };
 
+var randomMC = require('random-material-color');
+
 class Dashboard extends Component {
   constructor() {
     super();
@@ -246,7 +252,8 @@ class Dashboard extends Component {
             <table style={headerTableStyle}>
               <tbody>
                 <tr>
-                  {thContents.map((thContent, i) => <th key={i} style={merge(cellStyle, {padding : 3,})}>{thContent}</th>)}
+                  <th></th>
+                  {thContents.map((thContent, i) => <th key={i} style={merge(cellStyle, {padding : 3, height : 15, borderLeft : 'none', borderTop : 'none', borderRight : 'none', borderBottom : '3px solid #555555'})}>{thContent}</th>)}
                 </tr>
               </tbody>
             </table>
@@ -262,17 +269,17 @@ class Dashboard extends Component {
                 })}
               </tbody>
               {days.map(function(a, i){
-                return days[i].filter(b => b !== null).map(function(b, j){
-                  /*console.log(eventBlock, b.duration * 4.167, j * 4.167, (i + 1) * 12.5);
-            console.log('hi');*/
-                  return <div key={j} style={merge(eventBlock, {
-                    height : `${b.duration * 4.167}%`,
-                    top : `${j * 4.167}%`,
-                    left : `${(i + 1) * 12.5}%`})
-                  }>Hello World</div>;})
-                divs.map(function(b, j){
-                  return b;
-                })
+                return days[i].map(function(b, j){
+                  /*console.log(b.duration * 4.167, j * 4.167, (i + 1) * 12.5);*/
+                  if(b !== null){
+                    return <div key={j} style={merge(eventBlock, {
+                      height : `${b.duration * 1.0}%`,
+                      top : `${j * 1.04}%`,
+                      left : `${(i + 1) * 12.5 + (8 - i) / 10}%`,
+                      background : `${randomMC.getColor()}`})
+                    }>{b.title}</div>;
+                  } else return null;
+                  })
               })}
             </table>
           </div>
