@@ -84,6 +84,7 @@ class Question extends Component {
                   style={radioButtonStyle}
                   value={radio}
                   label={radio}
+                  key={i}
                 />
               ))}
             </RadioButtonGroup>
