@@ -275,19 +275,6 @@ export function startEventListener(db, uid) {
   });
 }
 
-export function removeEventListener(db, uid) {
-  db.ref('users').child(uid).child('events').off('value', function(snapshot) {
-    var evArray = [];
-
-    snapshot.forEach(function (child){
-      evArray.push(child.val());
-    });
-
-    generateSmartCalendar(evArray);
-  });
-}
-
-
 export function createEvent(db, uid, title, description, tag, duration, start=null) {
   db.ref('users/'+uid+'/tags').once('value', function(snapshot) {
     const priority = tag ? snapshot.val()[tag] : 0;
