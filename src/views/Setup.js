@@ -6,6 +6,8 @@ import {RadioButton, RadioButtonGroup} from 'material-ui/RadioButton';
 import RaisedButton from 'material-ui/RaisedButton';
 import { over, T, F, lensIndex } from 'ramda';
 import { questions, genTags, updateTags, sortTags } from '../personality';
+import { push } from 'react-router-redux';
+import { connect } from 'react-redux';
 
 const topSpace = {
   paddingTop: 64,
@@ -111,6 +113,13 @@ class Setup extends Component {
     this.updatePriorities = this.updatePriorities.bind(this);
   }
 
+  componentWillMount() {
+    const { isLoggedIn, dispatch } = this.props;
+    if (!isLoggedIn) {
+      dispatch(push('/'));
+    }
+  }
+
   updatePriorities(question, value) {
     this.setState({ tags: updateTags(question.high, question.low, value, this.state.tags) });
     console.warn(this.state.tags);
@@ -147,4 +156,8 @@ class Setup extends Component {
   }
 }
 
-export default Setup;
+const mapStateToProps = state => ({
+  isLoggedIn: state.user.isLoggedIn,
+});
+
+export default connect(mapStateToProps)(Setup);

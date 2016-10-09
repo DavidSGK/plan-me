@@ -2,7 +2,7 @@
 // We will retrieve this info from firebase when the user logins in
 
 import { mergeAll } from 'ramda';
-import { genTags } from '../personality';
+import { genTags, sortTags } from '../personality';
 import {
   LOG_IN_SUCCESS,
   LOG_OUT_SUCCESS,
@@ -11,14 +11,12 @@ import {
 
 const initialState = {
   isLoggedIn: false,
-  // a list of tags
-  priorities: genTags(),
 };
 
 const user = (state = initialState, action) => {
   switch (action.type) {
     case UPDATE_PRIORITIES: {
-      return merge(state, priorities: action.payload);
+      return merge(state, { priorities: sortTags(action.payload) });
     }
 
     case LOG_IN_SUCCESS: {

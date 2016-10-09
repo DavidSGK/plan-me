@@ -3,18 +3,20 @@ import { has, allPass } from 'ramda';
 import { push } from 'react-router-redux';
 
 const hasAllParams = allPass([
-  has('occupation'),
   has('priorities'),
 ]);
 
+const logInRealSuccess = payload => ({
+  type: User.LOG_IN_SUCCESS,
+  payload,
+});
+
 export const logInSuccess = payload => (dispatch, getState) => {
+  // check if the user has done the questionnaire
   if (!hasAllParams(getState().user)) {
     dispatch(push('/setup'));
   }
-  return {
-    type: User.LOG_IN_SUCCESS,
-    payload,
-  };
+  dispatch(logInRealSuccess(payload));
 };
 
 export const logOutSuccess = () => ({

@@ -38,9 +38,8 @@ const LogIn = ({dispatch}) => (
   <FlatButton style={buttonStyle} label="Login" onClick={onSignIn(dispatch)}/>  
 );
 
-const Logged = props => (
+const Logged = ({ dispatch }) => (
   <IconMenu
-    {...props}
     iconButtonElement={
       <IconButton><MoreVertIcon /></IconButton>
     }
@@ -48,7 +47,7 @@ const Logged = props => (
     anchorOrigin={{horizontal: 'right', vertical: 'top'}}
   >
     <MenuItem primaryText="Settings" />
-    <MenuItem primaryText="Sign out" onClick={onSignOut(props.dispatch)} />
+    <MenuItem primaryText="Sign out" onClick={onSignOut(dispatch)} />
   </IconMenu>
 );
 
