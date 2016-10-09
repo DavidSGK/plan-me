@@ -5,76 +5,8 @@ import ContentAdd from 'material-ui/svg-icons/content/add';
 import { merge, slice } from 'ramda';
 import AddEvent from '../components/AddEvent';
 import { connect } from 'react-redux';
+import RandomMC from 'random-material-color';
 
-//Test code
-var sample = new Array(672).fill(null);
-
-sample[54] = {duration: 3, title: 'test1', description: 'this is a description', priority: 1};
-sample[55] = {duration: 3, title: 'test1', description: 'this is a description', priority: 1};
-sample[56] = {duration: 3, title: 'test1', description: 'this is a description', priority: 1};
-
-sample[95] = {duration: 1, title: 'test2', description: 'this is a description', priority: 1};
-
-sample[96] = {duration: 2, title: 'test3', description: 'this is a description', priority: 1};
-sample[97] = {duration: 2, title: 'test3', description: 'this is a description', priority: 1};
-
-sample[54] = {duration: 3, title: 'test1', description: 'this is a description', priority: 1};
-sample[55] = {duration: 3, title: 'test1', description: 'this is a description', priority: 1};
-sample[56] = {duration: 3, title: 'test1', description: 'this is a description', priority: 1};
-
-sample[95] = {duration: 1, title: 'test2', description: 'this is a description', priority: 1};
-
-sample[96] = {duration: 2, title: 'test3', description: 'this is a description', priority: 1};
-sample[97] = {duration: 2, title: 'test3', description: 'this is a description', priority: 1};
-
-sample[154] = {duration: 3, title: 'test1', description: 'this is a description', priority: 1};
-sample[155] = {duration: 3, title: 'test1', description: 'this is a description', priority: 1};
-sample[156] = {duration: 3, title: 'test1', description: 'this is a description', priority: 1};
-
-sample[195] = {duration: 1, title: 'test2', description: 'this is a description', priority: 1};
-
-sample[196] = {duration: 2, title: 'test3', description: 'this is a description', priority: 1};
-sample[197] = {duration: 2, title: 'test3', description: 'this is a description', priority: 1};
-
-sample[254] = {duration: 3, title: 'test1', description: 'this is a description', priority: 1};
-sample[255] = {duration: 3, title: 'test1', description: 'this is a description', priority: 1};
-sample[256] = {duration: 3, title: 'test1', description: 'this is a description', priority: 1};
-
-sample[295] = {duration: 1, title: 'test2', description: 'this is a description', priority: 1};
-
-sample[296] = {duration: 2, title: 'test3', description: 'this is a description', priority: 1};
-sample[297] = {duration: 2, title: 'test3', description: 'this is a description', priority: 1};
-
-sample[354] = {duration: 3, title: 'test1', description: 'this is a description', priority: 1};
-sample[355] = {duration: 3, title: 'test1', description: 'this is a description', priority: 1};
-sample[356] = {duration: 3, title: 'test1', description: 'this is a description', priority: 1};
-
-sample[395] = {duration: 1, title: 'test2', description: 'this is a description', priority: 1};
-
-sample[396] = {duration: 2, title: 'test3', description: 'this is a description', priority: 1};
-sample[397] = {duration: 2, title: 'test3', description: 'this is a description', priority: 1};
-
-sample[454] = {duration: 3, title: 'test1', description: 'this is a description', priority: 1};
-sample[455] = {duration: 3, title: 'test1', description: 'this is a description', priority: 1};
-sample[456] = {duration: 3, title: 'test1', description: 'this is a description', priority: 1};
-
-sample[495] = {duration: 1, title: 'test2', description: 'this is a description', priority: 1};
-
-sample[496] = {duration: 2, title: 'test3', description: 'this is a description', priority: 1};
-sample[497] = {duration: 2, title: 'test3', description: 'this is a description', priority: 1};
-
-sample[554] = {duration: 3, title: 'test1', description: 'this is a description', priority: 1};
-sample[555] = {duration: 3, title: 'test1', description: 'this is a description', priority: 1};
-sample[556] = {duration: 3, title: 'test1', description: 'this is a description', priority: 1};
-
-sample[595] = {duration: 1, title: 'test2', description: 'this is a description', priority: 1};
-
-sample[596] = {duration: 2, title: 'test3', description: 'this is a description', priority: 1};
-sample[597] = {duration: 2, title: 'test3', description: 'this is a description', priority: 1};
-
-sample[654] = {duration: 3, title: 'test1', description: 'this is a description', priority: 1};
-sample[655] = {duration: 3, title: 'test1', description: 'this is a description', priority: 1};
-sample[656] = {duration: 3, title: 'test1', description: 'this is a description', priority: 1};
 
 const topSpace = {
   paddingTop : 64,
@@ -194,7 +126,7 @@ const eventBlock = {
   padding : 3,
 };
 
-const weekToDays = (weekArray) => {
+const weekToDays = (weekArray = Array(672).fill(null)) => {
   const days = new Array(7);
 
   var i, j, k;
@@ -229,8 +161,6 @@ const weekToDays = (weekArray) => {
   return days;
 };
 
-var randomMC = require('random-material-color');
-
 class Dashboard extends Component {
   constructor() {
     super();
@@ -250,7 +180,8 @@ class Dashboard extends Component {
   };
 
   render() {
-    const days = weekToDays(sample);
+    console.warn(this.props);
+    const days = weekToDays(this.props.calendar);
     return (
       <div style={topSpace}>
         <Paper style={calendarPane}>
@@ -281,7 +212,7 @@ class Dashboard extends Component {
                       height : `${b.duration * (100 / 96)}%`,
                       top : `${j * (100 / 96)}%`,
                       left : `${(i + 1) * 12.5 + (8 - i) / 10}%`,
-                      background : `${randomMC.getColor()}`})}
+                      background : `${RandomMC.getColor()}`})}
                     >{b.title}</div>;
                   } else return null;
                 })
@@ -308,4 +239,8 @@ class Dashboard extends Component {
   }
 }
 
-export default Dashboard;
+const mapStateToProps = state => ({
+  calendar: state.user.calendar,
+});
+
+export default connect()(Dashboard);

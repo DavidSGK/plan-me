@@ -22,8 +22,6 @@ const updateCalendar = calendar => ({
 export const logInSuccess = payload => (dispatch, getState) => {
   dispatch(logInRealSuccess(payload));
   const { uid } = getState().user;
-  startEventListener(db, uid);
-  console.warn(uid);
 
   getCalendar(db, uid, calendar => dispatch(updateCalendar(calendar)));
 
@@ -39,7 +37,6 @@ export const logInSuccess = payload => (dispatch, getState) => {
 };
 
 export const logOutSuccess = () => {
-  removeEventListener();
   return {
     type: User.LOG_OUT_SUCCESS,
   };

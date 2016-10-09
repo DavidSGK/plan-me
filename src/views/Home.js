@@ -48,7 +48,7 @@ const logo = {
   transform: 'rotate(30deg)',
 };
 
-const goToDashboard = dispatch => () => {
+export const goToDashboard = dispatch => () => {
   dispatch(push('/dashboard'));
 };
 
