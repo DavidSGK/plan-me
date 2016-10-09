@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { Component } from 'react';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import Paper from 'material-ui/Paper';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import { merge, slice } from 'ramda';
+import AddEvent from '../components/AddEvent';
 
 //Test code
 var sample = new Array(672).fill(null);
@@ -219,48 +220,80 @@ for(i = 0; i < 7; i++){
   }
 };
 
-const Dashboard = () => (
-  <div style={topSpace}>
-    <Paper style={calendarPane}>
-      <div style={merge(calendarDiv, {height : '10%',})}>
-      <table style={headerTableStyle}>
-        <tbody>
-          <tr>
-            {thContents.map((thContent, i) => <th key={i} style={merge(cellStyle, {padding : 3,})}>{thContent}</th>)}
-          </tr>
-        </tbody>
-      </table>
-    </div>
-      <div style={merge(calendarDiv, {height : '90%',})}>
-      <table style={tableStyle}>
-        <tbody>
-          {timeList.map(function(a, i){
-            return <tr key={i}>
-              <th key={i+200} style={timeCellStyle}>{a}</th>
-              {emptyRow.map((emptyRow, j) => <td key={j} style={cellStyle}>{emptyRow}</td>)}
-            </tr>
-          })}
-        </tbody>
-        {days.map(function(a, i){
-          return days[i].filter(b => b !== null).map(function(b, j){
-            /*console.log(eventBlock, b.duration * 4.167, j * 4.167, (i + 1) * 12.5);
+class Dashboard extends Component {
+  constructor() {
+    super();
+    this.state = {
+      isOpen: false,
+    };
+    this.handleOpen = this.handleOpen.bind(this);
+    this.handleClose = this.handleClose.bind(this);
+  }
+
+  handleOpen() {
+    this.setState({isOpen: true});
+  };
+
+  handleClose() {
+    this.setState({isOpen: false});
+  };
+
+  render() {
+    return (
+      <div style={topSpace}>
+        <Paper style={calendarPane}>
+          <div style={merge(calendarDiv, {height : '10%',})}>
+            <table style={headerTableStyle}>
+              <tbody>
+                <tr>
+                  {thContents.map((thContent, i) => <th key={i} style={merge(cellStyle, {padding : 3,})}>{thContent}</th>)}
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div style={merge(calendarDiv, {height : '90%',})}>
+            <table style={tableStyle}>
+              <tbody>
+                {timeList.map(function(a, i){
+                  return <tr key={i}>
+                    <th key={i+200} style={timeCellStyle}>{a}</th>
+                    {emptyRow.map((emptyRow, j) => <td key={j} style={cellStyle}>{emptyRow}</td>)}
+                  </tr>
+                })}
+              </tbody>
+              {days.map(function(a, i){
+                return days[i].filter(b => b !== null).map(function(b, j){
+                  /*console.log(eventBlock, b.duration * 4.167, j * 4.167, (i + 1) * 12.5);
             console.log('hi');*/
-            return <div key={j} style={merge(eventBlock, {
-                height : `${b.duration * 4.167}%`,
-                top : `${j * 4.167}%`,
-                left : `${(i + 1) * 12.5}%`})
-          }>Hello World</div>;})
-          divs.map(function(b, j){
-            return b;
-          })
-        })}
-      </table>
+                  return <div key={j} style={merge(eventBlock, {
+                    height : `${b.duration * 4.167}%`,
+                    top : `${j * 4.167}%`,
+                    left : `${(i + 1) * 12.5}%`})
+                  }>Hello World</div>;})
+                divs.map(function(b, j){
+                  return b;
+                })
+              })}
+            </table>
+          </div>
+        </Paper>
+
+        <FloatingActionButton
+          style={fabStyle}
+          onClick={this.handleOpen}
+        >
+          <ContentAdd />
+        </FloatingActionButton>
+
+        <AddEvent
+          isOpen={this.state.isOpen}
+          handleOpen={this.handleOpen}
+          handleClose={this.handleClose}
+        />
+
       </div>
-    </Paper>
-    <FloatingActionButton style={fabStyle}>
-      <ContentAdd />
-    </FloatingActionButton>
-  </div>
-);
+    );
+  }
+}
 
 export default Dashboard;

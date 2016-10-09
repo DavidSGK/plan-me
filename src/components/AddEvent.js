@@ -4,25 +4,6 @@ import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
 
 class AddEvent extends Component {
-  constructor(props) {
-    super(props);
-    const { isOpen } = props;
-
-    this.state = {
-      isOpen,
-    };
-  }
-
-  /*
-  handleOpen() {
-    this.setState({open: true});
-  };
-
-  handleClose() {
-    this.setState({open: false});
-  };
-  */
-
   render() {
     const {handleOpen, handleClose, isOpen} = this.props;
     const actions = [
