@@ -5,9 +5,14 @@ import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColu
 import {RadioButton, RadioButtonGroup} from 'material-ui/RadioButton';
 import RaisedButton from 'material-ui/RaisedButton';
 import { over, T, F, lensIndex } from 'ramda';
+import { questions, genTags, updateTags, sortTags } from '../personality';
+import { connect } from 'react-redux';
+import { db } from '../firebase/config';
+import { setTags } from '../util';
 
 const topSpace = {
   paddingTop: 64,
+  width: '100%',
 };
 
 const cardStyle = {
@@ -24,28 +29,8 @@ const radioButtonStyle = {
 };
 
 const buttonStyle = {
-  display: 'flex',
-  width: 64,
-  margin: 'auto',
+  width: 68,
 }
-
-const questions = [
-  {
-    text: 'Do you like chores?',
-    callbacks: [],
-    answered: false,
-  },
-  {
-    text: 'Do you like chores?',
-    callbacks: [],
-    answered: false,
-  },
-  {
-    text: 'Do you like chores?',
-    callbacks: [],
-    answered: false,
-  }
-];
 
 const leftText = {
   position: 'fixed',
@@ -72,42 +57,43 @@ class Question extends Component {
   }
 
   updateValue(evt, value) {
-    console.warn(this.props.index);
-    this.props.answer(this.props.index);
-    this.setState({ value });
+    const { answer, index, question, updatePriorities } = this.props;
+    answer(index);
+    updatePriorities(question, value);
   }
 
   render() {
+    const { index, question } = this.props;
     return (
       <div>
         <Card style={cardStyle}>
-          <CardTitle title={`Question ${this.props.index + 1}`} />
-          <CardText>{this.props.text}</CardText>
+          <CardTitle title={`Question ${index + 1}`} />
+          <CardText>{question.question}</CardText>
           <Divider />
           <CardText>
             <RadioButtonGroup
               name="choices"
               style={radioButtonGroupStyle}
               onChange={this.updateValue}
-              >
+            >
               <RadioButton style={radioButtonStyle}
                 value='-3'
-                />
+              />
               <RadioButton style={radioButtonStyle}
                 value='-2'
-                />
+              />
               <RadioButton style={radioButtonStyle}
                 value='-1'
-                />
+              />
               <RadioButton style={radioButtonStyle}
                 value='1'
-                />
+              />
               <RadioButton style={radioButtonStyle}
                 value='2'
-                />
+              />
               <RadioButton style={radioButtonStyle}
                 value='3'
-                />
+              />
             </RadioButtonGroup>
           </CardText>
         </Card>
@@ -121,8 +107,15 @@ class Setup extends Component {
     super();
     this.state = {
       questionsAnswered: questions.map(F),
+      tags: genTags(),
     };
     this.answer = this.answer.bind(this);
+    this.updatePriorities = this.updatePriorities.bind(this);
+  }
+
+  updatePriorities(question, value) {
+    this.setState({ tags: updateTags(question.high, question.low, value, this.state.tags) });
+    console.warn(this.state.tags);
   }
 
   // TODO make it work
@@ -132,19 +125,38 @@ class Setup extends Component {
   }
 
   render() {
+    const {uid} = this.props;
     return (
       <div style={topSpace}>
         <h3 style={leftText}>DISAGREE</h3>
-        {questions.map(
-          ({text}, i) => <Question key={i} index={i} text={text} answer={this.answer}/>
-        )}
+        {questions.map((question, i) => (
+          <Question
+            key={i}
+            index={i}
+            question={question}
+            answer={this.answer}
+            updatePriorities={this.updatePriorities}
+          />
+        ))}
 
-        <RaisedButton label="SUBMIT" style={buttonStyle} />
+        <div style={{ textAlign: 'center', marginBottom: '20px' }}>
+          <RaisedButton
+            label="SUBMIT"
+            primary
+            style={buttonStyle}
+            onClick={() => { setTags(db, uid, sortTags(this.state.tags)) }}
+          />
+        </div>
 
-        <h3 style={rightText}>AGREE</h3>
-      </div>
+      <h3 style={rightText}>AGREE</h3>
+    </div>
     )
   }
 }
 
-export default Setup;
+const mapStateToProps = state => ({
+  isLoggedIn: state.user.isLoggedIn,
+  uid: state.user.uid,
+});
+
+export default connect(mapStateToProps)(Setup);

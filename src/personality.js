@@ -1,5 +1,6 @@
 import * as T from './constants/tags';
-const tags = {
+
+export const genTags = () => ({
   FRIENDS : 0,
   SCHOOL : 0,
   WORK : 0,
@@ -11,28 +12,38 @@ const tags = {
   LEISURE : 0,
   FOOD : 0,
   CHORE : 0
-}
-var quArray = setQuestionArray();
-manuallyTestTags();
-var sorted = sortTags();
+});
 
-function sortTags(){
+const tags = genTags();
+
+export const questions = setQuestionArray();
+// manuallyTestTags();
+// var sorted = sortTags();
+
+export function sortTags(tags) {
   //sort the tags
-  var sorted = [];
+  var sortedArr = [];
   for (var i in tags){
-    sorted.push([i, tags[i]]);
+    sortedArr.push([i, tags[i]]);
   }
-  sorted.sort(function(a, b) {
+  sortedArr.sort(function(a, b) {
       return b[1] - a[1];
   });
-  for(var i = 0; i < sorted.length; i++){
-    sorted[i][1] = i+1;
-  }  return sorted;
+  for(var i = 0; i < sortedArr.length; i++){
+    sortedArr[i][1] = i+1;
+  }  
+  var sorted = {};
+  sortedArr.forEach(function(sortedElement){
+    sorted[sortedElement[0]] = sortedElement[1];
+  });
+  return sorted;
 }
 
 
-console.log(sorted);
-console.log(tags);
+// console.log(sorted);
+// console.log(tags);
+//UNCOMMENT ONCE COMBINED WITH THE MAIN.JS
+//setTags(sorted); //function in the main.js, will error until then
 function manuallyTestTags(){
   var quArray = setQuestionArray();
   updateTags(quArray[0].high, quArray[0].low, 1);
@@ -47,13 +58,14 @@ function manuallyTestTags(){
   updateTags(quArray[9].high, quArray[9].low, 1);
   updateTags(quArray[10].high, quArray[10].low, 0);
 }
-function updateTags(high, low, ans){
+export function updateTags(high, low, ans, tags){
   high.forEach(function(tagName){
-    tags[tagName] += ans;
+    tags[tagName] += parseInt(ans);
   });
   low.forEach(function(tagName){
-    tags[tagName] -= ans;
+    tags[tagName] -= parseInt(ans);
   });
+  return tags;
 }
 
 function setQuestionArray(){
@@ -108,9 +120,8 @@ function setQuestionArray(){
 }
 function returnQuestionSet(question, high, low){
   return {
-    question: question,
-    high: high,
-    low: low
+    question,
+    high,
+    low,
   };
 }
-

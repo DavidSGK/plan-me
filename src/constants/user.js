@@ -1,4 +1,4 @@
-export const UPDATE_PRIORITIES = 'UPDATE_PRIORITIES';
+export const UPDATE_TAGS = 'UPDATE_TAGS';
 
 export const LOG_IN_SUCCESS = 'LOG_IN_SUCCESS';
 
