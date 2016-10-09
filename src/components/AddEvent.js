@@ -69,6 +69,7 @@ class AddEvent extends Component {
       const start = 96 * day + 4 * time.getHours() + time.getMinutes() / 15;
       createEvent(db, uid, eventName, description, null, duration / 15, start);
     }
+    this.props.handleClose();
   }
 
   render() {

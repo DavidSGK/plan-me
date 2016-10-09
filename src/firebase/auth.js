@@ -17,6 +17,7 @@ const handleErrorDefault = error => {
  * @returns {void}
  *
  */
+
 export function signIn(handleSuccess, handleError = handleErrorDefault) {
   if (!auth.currentUser) {
     const provider = new Firebase.auth.GoogleAuthProvider();

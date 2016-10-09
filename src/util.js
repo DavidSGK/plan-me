@@ -28,7 +28,8 @@ var NUM_INTERVAL = 11;//672
 var calendar = null;
 
 export function getCalendar(db, uid, cb) {
-  db.ref('users/' + uid + '/calendar').on('value', function(snapshot) {
+  db.ref('users/' + uid + '/events').on('value', function(snapshot) {
+    console.warn(snapshot.val());
     cb(snapshot.val());
   });
 }
@@ -264,6 +265,18 @@ export function moveDown(db, uid, calendar, event) {
 
 export function startEventListener(db, uid) {
   db.ref('users').child(uid).child('events').on('value', function(snapshot) {
+    var evArray = [];
+
+    snapshot.forEach(function (child){
+      evArray.push(child.val());
+    });
+
+    generateSmartCalendar(evArray);
+  });
+}
+
+export function removeEventListener(db, uid) {
+  db.ref('users').child(uid).child('events').off('value', function(snapshot) {
     var evArray = [];
 
     snapshot.forEach(function (child){
