@@ -9,8 +9,11 @@ import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 import { db } from '../firebase/config';
 import * as Tags from '../constants/tags';
-import { keys } from 'ramda';
+import { keys, complement } from 'ramda';
 import { connect } from 'react-redux';
+import { createEvent } from '../util';
+
+const isNumber = complement(isNaN);
 
 class AddEvent extends Component {
   constructor() {
@@ -21,12 +24,13 @@ class AddEvent extends Component {
       duration: '',
       tag: '',
       enforce: false,
-      time: '',
-      day: {},
+      time: {},
+      day: '',
     };
     this.onChange = this.onChange.bind(this);
     this.handleSelect = this.handleSelect.bind(this);
     this.forbidSubmit = this.forbidSubmit.bind(this);
+    this.submitInfo = this.submitInfo.bind(this);
   }
 
   onChange(myState) {
@@ -46,13 +50,25 @@ class AddEvent extends Component {
     const {
       enforce, eventName, description, duration, tag, day, time
     } = this.state;
-    const nonEnforced = Boolean(eventName && description && duration && tag);
+    const nonEnforced = Boolean(eventName && description && duration && isNumber(duration) && tag);
 
     if (!enforce) {
       return nonEnforced;
     }
 
     return Boolean(nonEnforced && day && time);
+  }
+
+  submitInfo() {
+    const {uid} = this.props;
+    const {eventName, description, tag, duration, day, time, enforce} = this.state;
+
+    if (!enforce) {
+      createEvent(db, uid, eventName, description, tag, duration / 15);
+    } else {
+      const start = 96 * day + 4 * time.getHours() + time.getMinutes() / 15;
+      createEvent(db, uid, eventName, description, null, duration / 15, start);
+    }
   }
 
   render() {
@@ -67,7 +83,7 @@ class AddEvent extends Component {
         label="Submit"
         primary
         keyboardFocused
-        onTouchTap={handleClose}
+        onTouchTap={this.submitInfo}
         disabled={!this.forbidSubmit()}
       />,
     ];
@@ -135,6 +151,7 @@ class AddEvent extends Component {
             <br />
             <TimePicker
               hintText="Time of the day"
+              format="24hr"
               value={this.state.time}
               onChange={this.onChange('time')}
               disabled={!this.state.enforce}

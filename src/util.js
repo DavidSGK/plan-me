@@ -277,13 +277,14 @@ export function startEventListener(db, uid) {
 
 export function createEvent(db, uid, title, description, tag, duration, start=null) {
   db.ref('users/'+uid+'/tags').once('value', function(snapshot) {
+    const priority = tag ? snapshot.val()[tag] : 0;
     db.ref('users/'+uid+'/events').push().set(
       {
-        title: title,
-        description: description,
-        priority: snapshot.val()[tag],
-        duration: duration,
-        start: start
+        title,
+        description,
+        priority,
+        duration,
+        start,
 
       }
     );
