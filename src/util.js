@@ -39,7 +39,6 @@ export function getCalendar(db, uid, cb) {
         arr[i] = snapshot.val()[i];
       }
     }
-    console.warn(arr);
     cb(arr);
   });
 }
@@ -76,7 +75,6 @@ export function generateCalendar(lst) {
 
 export function generateSmartCalendar(db, uid, lst) {
   if (!lst || lst.length == 0) return;
-  console.log(lst);
   lst = mergesort(lst);
 
   var cal = [];
@@ -102,7 +100,6 @@ export function generateSmartCalendar(db, uid, lst) {
   }
 
   for (var i=counter; i<lst.length; i++) {
-    console.log(i);
     var broken = false;
     for (var j=avgSpace; j>=0; j--) {
       for (var k in obj) {

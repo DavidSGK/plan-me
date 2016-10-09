@@ -131,7 +131,6 @@ const weekToDays = (weekArray = Array(672).fill(null)) => {
 
   var i, j, k;
   for(i = 0; i < 7; i++){
-    console.log()
     days[i] = slice(i * 96, (i+1) * 96, weekArray);
     for(j = 0; j < 96; j++){
       if(j == 0 && days[i][0] != null && (days[i][days[i][0].duration-1] == null || days[i][0].title != days[i][days[i][0].duration-1].title)){
@@ -180,7 +179,6 @@ class Dashboard extends Component {
   };
 
   render() {
-    console.warn(this.props);
     const days = weekToDays(this.props.calendar);
     return (
       <div style={topSpace}>
@@ -243,4 +241,4 @@ const mapStateToProps = state => ({
   calendar: state.user.calendar,
 });
 
-export default connect()(Dashboard);
+export default connect(mapStateToProps)(Dashboard);

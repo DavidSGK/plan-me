@@ -33,7 +33,6 @@ const user = (state = initialState, action) => {
     }
 
     case UPDATE_CALENDAR: {
-      console.warn(action.payload);
       return merge(
         state,
         { calendar: action.payload }
