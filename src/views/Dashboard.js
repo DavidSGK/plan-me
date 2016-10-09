@@ -107,7 +107,7 @@ const calendarPane = {
   height : '80%',
   position : 'absolute',
   bottom : '7%',
-  right : '5%',
+  left : '5%',
 };
 
 const calendarDiv = {
