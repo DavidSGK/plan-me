@@ -48,6 +48,8 @@ const rightText = {
   textAlign: 'center',
 };
 
+const radioValues = [-3, -2, -1, 1, 2, 3];
+
 class Question extends Component {
   constructor(props) {
     super(props);
@@ -77,24 +79,13 @@ class Question extends Component {
               style={radioButtonGroupStyle}
               onChange={this.updateValue}
             >
-              <RadioButton style={radioButtonStyle}
-                value='-3'
-              />
-              <RadioButton style={radioButtonStyle}
-                value='-2'
-              />
-              <RadioButton style={radioButtonStyle}
-                value='-1'
-              />
-              <RadioButton style={radioButtonStyle}
-                value='1'
-              />
-              <RadioButton style={radioButtonStyle}
-                value='2'
-              />
-              <RadioButton style={radioButtonStyle}
-                value='3'
-              />
+              {radioValues.map((radio, i) => (
+                <RadioButton
+                  style={radioButtonStyle}
+                  value={radio}
+                  label={radio}
+                />
+              ))}
             </RadioButtonGroup>
           </CardText>
         </Card>
