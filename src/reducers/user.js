@@ -1,12 +1,12 @@
 // if this does not exist we direct the user to the setup page
 // We will retrieve this info from firebase when the user logins in
 
-import { mergeAll } from 'ramda';
+import { mergeAll, merge } from 'ramda';
 import { genTags, sortTags } from '../personality';
 import {
   LOG_IN_SUCCESS,
   LOG_OUT_SUCCESS,
-  UPDATE_PRIORITIES,
+  UPDATE_TAGS,
 } from '../constants/user';
 
 const initialState = {
@@ -15,8 +15,8 @@ const initialState = {
 
 const user = (state = initialState, action) => {
   switch (action.type) {
-    case UPDATE_PRIORITIES: {
-      return merge(state, { priorities: sortTags(action.payload) });
+    case UPDATE_TAGS: {
+      return merge(state, { tags: action.payload });
     }
 
     case LOG_IN_SUCCESS: {
