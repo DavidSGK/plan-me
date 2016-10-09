@@ -18,7 +18,7 @@ const initialState = {
 const user = (state = initialState, action) => {
   switch (action.type) {
     case UPDATE_PRIORITIES: {
-      return merge(state, priorities: state.priorities + action.payload);
+      return merge(state, priorities: action.payload);
     }
 
     case LOG_IN_SUCCESS: {
