@@ -23,6 +23,7 @@ export const logInSuccess = payload => (dispatch, getState) => {
   dispatch(logInRealSuccess(payload));
   const { uid } = getState().user;
 
+  //startEventListener(db, uid);
   getCalendar(db, uid, calendar => dispatch(updateCalendar(calendar)));
 
   // check if the user has done the questionnaire
