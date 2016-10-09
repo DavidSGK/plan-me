@@ -290,8 +290,6 @@ class Dashboard extends Component {
           </div>
         </Paper>
 
-        <div style={tooltipStyle}>Test</div>
-
         <FloatingActionButton
           style={fabStyle}
           onClick={this.handleOpen}
