@@ -8,6 +8,7 @@ import MenuItem from 'material-ui/MenuItem';
 import { connect } from 'react-redux';
 import { onSignIn, onSignOut } from '../../utils/auth';
 import { push } from 'react-router-redux';
+import { goToDashboard } from '../Home';
 
 const headerStyle = {
   position: 'fixed',
@@ -22,7 +23,7 @@ const buttonStyle = {
 };
 
 const LogIn = ({dispatch}) => (
-  <FlatButton style={buttonStyle} label="Login" onClick={onSignIn(dispatch)}/>  
+  <FlatButton style={buttonStyle} label="Login" onClick={onSignIn(dispatch, goToDashboard)}/>  
 );
 
 const Logged = ({ dispatch }) => (
