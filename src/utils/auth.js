@@ -7,7 +7,7 @@ import { signIn, signOut } from '../firebase/auth';
 export const onSignIn = (dispatch, cb) => () => {
   signIn(result => {
     dispatch(logInSuccess(result));
-    cb(dispatch);
+    cb(dispatch)();
   });
 };
 

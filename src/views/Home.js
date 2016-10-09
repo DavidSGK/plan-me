@@ -62,7 +62,7 @@ const Home = ({ dispatch, isLoggedIn }) => (
           style={tryBtnStyle}
           label="Try it out"
           primary
-          onClick={isLoggedIn ? onSignIn(dispatch, goToDashboard) : goToDashboard(dispatch)}
+          onClick={!isLoggedIn ? onSignIn(dispatch, goToDashboard) : goToDashboard(dispatch)}
         />
       </div>
       <img style={logo} src="/assets/Logo.svg" width="28%"></img>
