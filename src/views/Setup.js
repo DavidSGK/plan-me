@@ -8,6 +8,8 @@ import { over, T, F, lensIndex } from 'ramda';
 import { questions, genTags, updateTags, sortTags } from '../personality';
 import { push } from 'react-router-redux';
 import { connect } from 'react-redux';
+import { db } from '../firebase/config';
+import { setTags } from '../util';
 
 const topSpace = {
   paddingTop: 64,
@@ -132,6 +134,7 @@ class Setup extends Component {
   }
 
   render() {
+    const {uid} = this.props;
     return (
       <div style={topSpace}>
         <h3 style={leftText}>DISAGREE</h3>
@@ -148,6 +151,7 @@ class Setup extends Component {
         <RaisedButton
           label="SUBMIT"
           style={buttonStyle}
+          onClick={() => { setTags(db, uid, sortTags(this.state.tags)) }}
         />
 
         <h3 style={rightText}>AGREE</h3>
@@ -158,6 +162,7 @@ class Setup extends Component {
 
 const mapStateToProps = state => ({
   isLoggedIn: state.user.isLoggedIn,
+  uid: state.user.uid,
 });
 
 export default connect(mapStateToProps)(Setup);

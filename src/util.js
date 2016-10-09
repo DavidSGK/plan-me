@@ -27,13 +27,13 @@ var NUM_INTERVAL = 11;//672
 
 var calendar = null;
 
-function getCalendar(db, uid, cb) {
+export function getCalendar(db, uid, cb) {
   db.ref('users/' + uid + '/calendar').on('value', function(snapshot) {
     cb(snapshot.val());
   });
 }
 
-function generateCalendar(lst) {
+export function generateCalendar(lst) {
   lst = mergesort(lst);
 
   var cal = [];
@@ -63,7 +63,7 @@ function generateCalendar(lst) {
   return cal;
 }
 
-function generateSmartCalendar(db, uid, lst) {
+export function generateSmartCalendar(db, uid, lst) {
   if (!lst || lst.length == 0) return;
   lst = mergesort(lst);
 
@@ -118,15 +118,15 @@ function generateSmartCalendar(db, uid, lst) {
   db.ref('users/' + uid + '/calendar').set(cal);
 }
 
-function setTags(db, uid, obj) {
+export function setTags(db, uid, obj) {
   db.ref('users/'+uid+'/tags').set(obj);
 }
 
-function numSpaces(total, n) {
+export function numSpaces(total, n) {
   return Math.floor(total/n);
 }
 
-function totalDuration(arr) {
+export function totalDuration(arr) {
   var total=0;
   for (var i=0; i<arr.length;i++) {
     if (arr[i] && !Object.compare(arr[i], arr[i-1])) total+=arr[i]['duration'];
@@ -134,7 +134,7 @@ function totalDuration(arr) {
   return total;
 }
 
-function largestSubarrayIndex(arr) {
+export function largestSubarrayIndex(arr) {
   var start=0;
   var max = 0, ind=0;
 
@@ -157,20 +157,20 @@ function largestSubarrayIndex(arr) {
   return [max, ind];
 }
 
-function place(lst, n, ind, elem, space) {
+export function place(lst, n, ind, elem, space) {
   for (var i=0; i<n+space; i++) {
     if (i < n) lst[ind+i] = elem;
     else lst[ind+i] = ' ';
   }
 }
 
-function placeObj(obj, n, ind, space) {
+export function placeObj(obj, n, ind, space) {
   for (var i=0; i<n+space; i++) {
     delete obj[ind+i];
   }
 }
 
-function canBePlaced(obj, n, ind, space) {
+export function canBePlaced(obj, n, ind, space) {
   for (var i=0; i<n+space; i++) {
     if (! ((ind+i) in obj)) {
       return false;
@@ -213,7 +213,7 @@ function merge(l1, l2) {
 }
 
 //Can take event or id, need to decide.
-function moveDown(db, uid, calendar, event) {
+export function moveDown(db, uid, calendar, event) {
   var aFound=false, bFound = false;
   var aStart=0, bStart=0;
   var bEnd=0, b=-1;
@@ -262,7 +262,7 @@ function moveDown(db, uid, calendar, event) {
 
 }
 
-function startEventListener(db, uid) {
+export function startEventListener(db, uid) {
   db.ref('users').child(uid).child('events').on('value', function(snapshot) {
     var evArray = [];
 
@@ -275,7 +275,7 @@ function startEventListener(db, uid) {
 }
 
 
-function createEvent(db, uid, title, description, tag, duration, start=null) {
+export function createEvent(db, uid, title, description, tag, duration, start=null) {
   db.ref('users/'+uid+'/tags').once('value', function(snapshot) {
     db.ref('users/'+uid+'/events').push().set(
       {
@@ -288,13 +288,4 @@ function createEvent(db, uid, title, description, tag, duration, start=null) {
       }
     );
   });
-}
-
-Util = {
-  getCalendar: getCalendar,
-  generateSmartCalendar: generateSmartCalendar,
-  setTags: setTags,
-  moveDown: moveDown,
-  createEvent: createEvent,
-  startEventListener: startEventListener,
 }
