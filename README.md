@@ -1,5 +1,5 @@
 ##Check it out live!
-[plan-me.org](plan-me.org) or davidsgk.github.io/calendar
+[plan-me.org](plan-me.org) or [davidsgk.github.io/calendar](davidsgk.github.io/calendar)
 
 ## Challenges we ran into
 One challenge that we ran into is in balancing the accuracy of the calendar scheduling. As the scheduling is based upon the user profile, it is vital that the profile is very accurate. However, accuracy comes at a cost. The more accurate the profile, the more data we need to compute it. We needed to find a balance where the profile is accurate most of the time, without forcing the user to spend too long answering personality questions. Our plan to resolve this issue is to use machine learning to generate a user profile for several categories of users (such as "finishes tasks first", "does not like doing work", etc.). This allows us to quickly narrow down the type of user, and then further customize with a higher degree of accuracy. 
